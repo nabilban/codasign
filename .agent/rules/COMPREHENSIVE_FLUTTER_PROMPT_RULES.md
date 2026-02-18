@@ -396,6 +396,18 @@ blocTest<FeatureCubit, FeatureState>(
 - [ ] Set up testing infrastructure
 - [ ] Create README with setup instructions
 
----
+## 14. Code Quality & Maintenance
+
+**DO:**
+
+- ✅ Always solve warnings (deprecation, performance, etc.)
+- ✅ Always solve errors immediately
+- ✅ Ensure `flutter analyze` passes with zero issues before completion
+- ✅ Fix all lints provided by `very_good_analysis` or other configured linters
+
+**DON'T:**
+
+- ❌ Leave warnings or errors in the codebase (except `// TODO:` comments)
+- ❌ Ignore deprecation notices
 
 **Source**: LiList Project Analysis | **Purpose**: Reusable Flutter Standards

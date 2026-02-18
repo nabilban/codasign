@@ -1,4 +1,5 @@
-import 'package:codasign/counter/counter.dart';
+import 'package:codasign/app/features/home/pages/home_page.dart';
+import 'package:codasign/app/ui/theme.dart';
 import 'package:codasign/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
@@ -8,15 +9,10 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        appBarTheme: AppBarTheme(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        ),
-        useMaterial3: true,
-      ),
+      theme: AppTheme.darkTheme,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const CounterPage(),
+      home: const HomePage(),
     );
   }
 }
