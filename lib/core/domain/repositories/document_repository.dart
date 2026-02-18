@@ -5,6 +5,7 @@ import 'package:dartz/dartz.dart';
 abstract class DocumentRepository {
   Future<Either<Failure, DocumentModel?>> pickDocument();
   Future<Either<Failure, List<DocumentModel>>> getSavedDocuments();
+  Stream<List<DocumentModel>> documentsStream();
   Future<Either<Failure, Unit>> saveSignedDocument(DocumentModel document);
   Future<Either<Failure, Unit>> deleteDocument(String id);
 }

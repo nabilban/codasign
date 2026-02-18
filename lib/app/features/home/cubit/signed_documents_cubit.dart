@@ -1,14 +1,21 @@
+import 'dart:async';
+
 import 'package:codasign/app/features/home/cubit/signed_documents_state.dart';
+import 'package:codasign/core/domain/models/document_model.dart';
 import 'package:codasign/core/domain/repositories/document_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignedDocumentsCubit extends Cubit<SignedDocumentsState> {
   SignedDocumentsCubit({required this.repository})
     : super(SignedDocumentsState.initial()) {
+    _subscription = repository.documentsStream().listen((documents) {
+      emit(state.copyWith(isLoading: false, documents: documents));
+    });
     loadDocuments();
   }
 
   final DocumentRepository repository;
+  StreamSubscription<List<DocumentModel>>? _subscription;
 
   Future<void> loadDocuments() async {
     emit(state.copyWith(isLoading: true, failure: null));
@@ -26,5 +33,11 @@ class SignedDocumentsCubit extends Cubit<SignedDocumentsState> {
       (_) async => null,
       (_) => loadDocuments(),
     );
+  }
+
+  @override
+  Future<void> close() {
+    _subscription?.cancel();
+    return super.close();
   }
 }

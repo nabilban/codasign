@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:codasign/app/features/document/pages/signed_document_preview_page.dart';
+import 'package:codasign/app/features/document/pages/signed_documents_library_page.dart';
 import 'package:codasign/app/features/home/cubit/saved_signatures_cubit.dart';
 import 'package:codasign/app/features/home/cubit/saved_signatures_state.dart';
 import 'package:codasign/app/features/home/cubit/signed_documents_cubit.dart';
@@ -11,6 +13,7 @@ import 'package:codasign/core/domain/models/saved_signature.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 
 class StatsSection extends StatelessWidget {
   const StatsSection({super.key});
@@ -20,9 +23,7 @@ class StatsSection extends StatelessWidget {
     return BlocBuilder<SignedDocumentsCubit, SignedDocumentsState>(
       builder: (context, state) {
         final totalSigned = state.documents.length;
-        // Mock total pages for now, or sum up if we had that data
-        final totalPages =
-            state.documents.length * 2; // Example: 2 pages per doc
+        final totalPages = state.documents.length * 2;
 
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 24),
@@ -294,7 +295,18 @@ class DocumentsSection extends StatelessWidget {
               ),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                final cubit = context.read<SignedDocumentsCubit>();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (context) => BlocProvider.value(
+                      value: cubit,
+                      child: const SignedDocumentsLibraryPage(),
+                    ),
+                  ),
+                );
+              },
               child: Text(
                 'View All',
                 style: TextStyle(
@@ -320,7 +332,9 @@ class DocumentsSection extends StatelessWidget {
             return ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: state.documents.length,
+              itemCount: state.documents.length > 3
+                  ? 3
+                  : state.documents.length,
               separatorBuilder: (context, index) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
                 return _SignedDocumentCard(document: state.documents[index]);
@@ -375,70 +389,94 @@ class _SignedDocumentCard extends StatelessWidget {
     final theme = Theme.of(context);
     final dateStr = DateFormat('MMM dd, yyyy').format(document.createdAt);
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (context) => SignedDocumentPreviewPage(document: document),
         ),
       ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Icon(
-              Icons.description_rounded,
-              color: AppColors.primary,
-              size: 24,
-            ),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.1),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(
+                Icons.description_rounded,
+                color: AppColors.primary,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    document.name,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Signed on $dateStr',
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.5),
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Row(
               children: [
-                Text(
-                  document.name,
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                IconButton(
+                  onPressed: () {
+                    final file = XFile(document.path);
+                    Share.shareXFiles([
+                      file,
+                    ], text: 'Signed Document: ${document.name}');
+                  },
+                  icon: const Icon(
+                    Icons.share_outlined,
+                    color: Colors.white70,
+                    size: 20,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  tooltip: 'Share',
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  'Signed on $dateStr',
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.5),
-                    fontSize: 12,
+                IconButton(
+                  onPressed: () {
+                    context.read<SignedDocumentsCubit>().removeDocument(
+                      document.id,
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.delete_outline,
+                    color: Colors.redAccent,
+                    size: 20,
                   ),
+                  tooltip: 'Delete',
                 ),
               ],
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              color: Colors.green.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Text(
-              'Completed',
-              style: TextStyle(
-                color: Colors.greenAccent,
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

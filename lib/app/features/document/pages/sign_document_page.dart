@@ -242,6 +242,7 @@ class SignDocumentPage extends StatelessWidget {
                         BlocProvider(
                           create: (context) => PDFSigningCubit(
                             repository: getIt(),
+                            mergingService: getIt(),
                             initialState: PDFSigningState.initial(document),
                           ),
                         ),

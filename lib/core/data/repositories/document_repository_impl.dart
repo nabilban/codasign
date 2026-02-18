@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:codasign/core/data/datasources/document_local_datasource.dart';
 import 'package:codasign/core/domain/models/document_model.dart';
 import 'package:codasign/core/domain/models/failure.dart';
@@ -7,9 +9,18 @@ import 'package:file_picker/file_picker.dart';
 import 'package:uuid/uuid.dart';
 
 class DocumentRepositoryImpl implements DocumentRepository {
-  const DocumentRepositoryImpl({required this.datasource});
+  DocumentRepositoryImpl({required this.datasource});
 
   final DocumentLocalDatasource datasource;
+  final _controller = StreamController<List<DocumentModel>>.broadcast();
+
+  @override
+  Stream<List<DocumentModel>> documentsStream() => _controller.stream;
+
+  Future<void> _refresh() async {
+    final docs = await datasource.loadSignedDocuments();
+    _controller.add(docs);
+  }
 
   @override
   Future<Either<Failure, DocumentModel?>> pickDocument() async {
@@ -54,6 +65,7 @@ class DocumentRepositoryImpl implements DocumentRepository {
   ) async {
     try {
       await datasource.saveSignedDocument(document);
+      await _refresh();
       return const Right(unit);
     } on Exception catch (e) {
       return Left(Failure.database(message: e.toString()));
@@ -64,6 +76,7 @@ class DocumentRepositoryImpl implements DocumentRepository {
   Future<Either<Failure, Unit>> deleteDocument(String id) async {
     try {
       await datasource.deleteDocument(id);
+      await _refresh();
       return const Right(unit);
     } on Exception catch (e) {
       return Left(Failure.database(message: e.toString()));

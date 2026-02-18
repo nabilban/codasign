@@ -6,6 +6,16 @@ import 'package:path_provider/path_provider.dart';
 
 class DocumentLocalDatasource {
   static const _indexFileName = 'signed_documents_index.json';
+  static const _signedDocsDir = 'signed_documents';
+
+  Future<Directory> _getSignedDocsDir() async {
+    final appDir = await getApplicationDocumentsDirectory();
+    final dir = Directory('${appDir.path}/$_signedDocsDir');
+    if (!dir.existsSync()) {
+      await dir.create(recursive: true);
+    }
+    return dir;
+  }
 
   Future<File> _getIndexFile() async {
     final appDir = await getApplicationDocumentsDirectory();
@@ -25,10 +35,22 @@ class DocumentLocalDatasource {
       ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
   }
 
-  Future<void> saveSignedDocument(DocumentModel document) async {
+  Future<DocumentModel> saveSignedDocument(DocumentModel document) async {
+    final signedDir = await _getSignedDocsDir();
+    final fileName =
+        'signed_${DateTime.now().millisecondsSinceEpoch}_${document.name}';
+    final newPath = '${signedDir.path}/$fileName';
+
+    // Copy the original file to the new path
+    await File(document.path).copy(newPath);
+
+    final updatedDoc = document.copyWith(path: newPath);
+
     final existing = await loadSignedDocuments();
-    existing.insert(0, document);
+    existing.insert(0, updatedDoc);
     await _writeIndex(existing);
+
+    return updatedDoc;
   }
 
   Future<void> deleteDocument(String id) async {

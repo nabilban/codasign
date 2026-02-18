@@ -5,6 +5,7 @@ import 'package:codasign/app/features/document/widgets/signature_picker_sheet.da
 import 'package:codasign/app/ui/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart' as sfpdf;
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class PDFSigningPage extends StatefulWidget {
@@ -16,6 +17,22 @@ class PDFSigningPage extends StatefulWidget {
 
 class _PDFSigningPageState extends State<PDFSigningPage> {
   final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
+  Size _viewerSize = Size.zero;
+
+  /// Gets the actual PDF page dimensions in points (1/72 inch)
+  Size _getPdfPageSize(String path, int pageIndex) {
+    final bytes = File(path).readAsBytesSync();
+    final document = sfpdf.PdfDocument(inputBytes: bytes);
+    try {
+      if (pageIndex < 1 || pageIndex > document.pages.count) {
+        return const Size(612, 792); // Default letter size
+      }
+      final page = document.pages[pageIndex - 1];
+      return Size(page.size.width, page.size.height);
+    } finally {
+      document.dispose();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +42,22 @@ class _PDFSigningPageState extends State<PDFSigningPage> {
         listener: (context, state) {
           if (state.saveSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Document signed successfully!')),
+              const SnackBar(
+                content: Text('Document signed and saved to history!'),
+                backgroundColor: Colors.green,
+              ),
             );
             Navigator.popUntil(context, (route) => route.isFirst);
+          }
+          if (state.failure != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Error: ${state.failure!.message}',
+                ),
+                backgroundColor: Colors.red,
+              ),
+            );
           }
         },
         builder: (context, state) {
@@ -36,50 +66,62 @@ class _PDFSigningPageState extends State<PDFSigningPage> {
               children: [
                 _buildHeader(context, state),
                 Expanded(
-                  child: Stack(
-                    children: [
-                      SfPdfViewer.file(
-                        File(state.document.path),
-                        key: _pdfViewerKey,
-                        onPageChanged: (details) {
-                          context.read<PDFSigningCubit>().updatePage(
-                            details.newPageNumber,
-                          );
-                        },
-                      ),
-                      if (state.selectedSignature != null)
-                        Positioned(
-                          left: state.signaturePosition.dx,
-                          top: state.signaturePosition.dy,
-                          child: GestureDetector(
-                            onPanUpdate: (details) {
-                              context.read<PDFSigningCubit>().updatePosition(
-                                state.signaturePosition + details.delta,
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      _viewerSize = Size(
+                        constraints.maxWidth,
+                        constraints.maxHeight,
+                      );
+                      return Stack(
+                        children: [
+                          SfPdfViewer.file(
+                            File(state.document.path),
+                            key: _pdfViewerKey,
+                            onPageChanged: (details) {
+                              context.read<PDFSigningCubit>().updatePage(
+                                details.newPageNumber,
                               );
                             },
-                            child: Transform.scale(
-                              scale: state.signatureScale,
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: AppColors.primary,
+                          ),
+                          if (state.selectedSignature != null)
+                            Positioned(
+                              left: state.signaturePosition.dx,
+                              top: state.signaturePosition.dy,
+                              child: GestureDetector(
+                                onPanUpdate: (details) {
+                                  context
+                                      .read<PDFSigningCubit>()
+                                      .updatePosition(
+                                        state.signaturePosition + details.delta,
+                                      );
+                                },
+                                child: Transform.scale(
+                                  scale: state.signatureScale,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: AppColors.primary,
+                                      ),
+                                      borderRadius: BorderRadius.circular(4),
+                                      color: AppColors.primary.withValues(
+                                        alpha: 0.1,
+                                      ),
+                                    ),
+                                    child: Image.file(
+                                      File(
+                                        state.selectedSignature!.filePath,
+                                      ),
+                                      height: 80,
+                                      fit: BoxFit.contain,
+                                    ),
                                   ),
-                                  borderRadius: BorderRadius.circular(4),
-                                  color: AppColors.primary.withValues(
-                                    alpha: 0.1,
-                                  ),
-                                ),
-                                child: Image.file(
-                                  File(state.selectedSignature!.filePath),
-                                  height: 80,
-                                  fit: BoxFit.contain,
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                    ],
+                        ],
+                      );
+                    },
                   ),
                 ),
                 _buildControls(context, state),
@@ -126,8 +168,20 @@ class _PDFSigningPageState extends State<PDFSigningPage> {
           ),
           if (state.selectedSignature != null)
             TextButton(
-              onPressed: () =>
-                  context.read<PDFSigningCubit>().saveSignedDocument(),
+              onPressed: state.isSaving
+                  ? null
+                  : () {
+                      final pdfSize = _getPdfPageSize(
+                        state.document.path,
+                        state.currentPage,
+                      );
+                      context.read<PDFSigningCubit>().saveSignedDocument(
+                        pdfPageWidth: pdfSize.width,
+                        pdfPageHeight: pdfSize.height,
+                        viewerPageWidth: _viewerSize.width,
+                        viewerPageHeight: _viewerSize.height,
+                      );
+                    },
               child: state.isSaving
                   ? const SizedBox(
                       height: 20,
