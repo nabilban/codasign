@@ -77,6 +77,7 @@ class _PDFSigningPageState extends State<PDFSigningPage> {
                           SfPdfViewer.file(
                             File(state.document.path),
                             key: _pdfViewerKey,
+                            pageSpacing: 0,
                             onPageChanged: (details) {
                               context.read<PDFSigningCubit>().updatePage(
                                 details.newPageNumber,
