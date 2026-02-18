@@ -8,4 +8,5 @@ abstract class DocumentRepository {
   Stream<List<DocumentModel>> documentsStream();
   Future<Either<Failure, Unit>> saveSignedDocument(DocumentModel document);
   Future<Either<Failure, Unit>> deleteDocument(String id);
+  Future<Either<Failure, Unit>> clearAllDocuments();
 }

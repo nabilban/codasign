@@ -35,6 +35,15 @@ class SignedDocumentsCubit extends Cubit<SignedDocumentsState> {
     );
   }
 
+  Future<void> clearAll() async {
+    emit(state.copyWith(isLoading: true, failure: null));
+    final result = await repository.clearAllDocuments();
+    result.fold(
+      (failure) => emit(state.copyWith(isLoading: false, failure: failure)),
+      (_) => emit(state.copyWith(isLoading: false, documents: [])),
+    );
+  }
+
   @override
   Future<void> close() {
     _subscription?.cancel();

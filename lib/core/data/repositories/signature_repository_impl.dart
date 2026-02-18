@@ -44,4 +44,14 @@ class SignatureRepositoryImpl implements SignatureRepository {
       return Left(Failure.database(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> clearAllSignatures() async {
+    try {
+      await datasource.deleteAllSignatures();
+      return const Right(unit);
+    } on Exception catch (e) {
+      return Left(Failure.database(message: e.toString()));
+    }
+  }
 }

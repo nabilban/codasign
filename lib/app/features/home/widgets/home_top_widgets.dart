@@ -1,6 +1,8 @@
 import 'package:codasign/app/features/document/cubit/document_selection_cubit.dart';
 import 'package:codasign/app/features/document/pages/sign_document_page.dart';
 import 'package:codasign/app/features/home/cubit/saved_signatures_cubit.dart';
+import 'package:codasign/app/features/home/cubit/signed_documents_cubit.dart';
+import 'package:codasign/app/features/settings/pages/settings_page.dart';
 import 'package:codasign/app/features/signature/pages/create_signature_page.dart';
 import 'package:codasign/app/providers/providers.dart';
 import 'package:codasign/app/ui/colors.dart';
@@ -23,7 +25,7 @@ class HeaderSection extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  // TODO: Change LOGO TEXT AND ICON
+                  // TODO(nabilban): Change LOGO TEXT AND ICON
                   Icon(
                     Icons.edit_document,
                     size: 35,
@@ -50,7 +52,22 @@ class HeaderSection extends StatelessWidget {
             ],
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              final signaturesCubit = context.read<SavedSignaturesCubit>();
+              final documentsCubit = context.read<SignedDocumentsCubit>();
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (context) => MultiBlocProvider(
+                    providers: [
+                      BlocProvider.value(value: signaturesCubit),
+                      BlocProvider.value(value: documentsCubit),
+                    ],
+                    child: const SettingsPage(),
+                  ),
+                ),
+              );
+            },
             icon: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(

@@ -75,6 +75,17 @@ class SignatureLocalDatasource {
     await _writeIndex(updated);
   }
 
+  Future<void> deleteAllSignatures() async {
+    final sigDir = await _getSignaturesDir();
+    if (sigDir.existsSync()) {
+      await sigDir.delete(recursive: true);
+    }
+    final indexFile = await _getIndexFile();
+    if (indexFile.existsSync()) {
+      await indexFile.delete();
+    }
+  }
+
   Future<void> _writeIndex(List<SavedSignature> signatures) async {
     final indexFile = await _getIndexFile();
     final jsonStr = jsonEncode(signatures.map((s) => s.toJson()).toList());

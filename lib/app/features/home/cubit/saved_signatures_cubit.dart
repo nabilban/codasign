@@ -35,4 +35,13 @@ class SavedSignaturesCubit extends Cubit<SavedSignaturesState> {
       },
     );
   }
+
+  Future<void> clearAll() async {
+    emit(state.copyWith(isLoading: true, failure: null));
+    final result = await repository.clearAllSignatures();
+    result.fold(
+      (failure) => emit(state.copyWith(isLoading: false, failure: failure)),
+      (_) => emit(state.copyWith(isLoading: false, signatures: [])),
+    );
+  }
 }

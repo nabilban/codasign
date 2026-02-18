@@ -82,4 +82,15 @@ class DocumentRepositoryImpl implements DocumentRepository {
       return Left(Failure.database(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> clearAllDocuments() async {
+    try {
+      await datasource.deleteAllDocuments();
+      await _refresh();
+      return const Right(unit);
+    } on Exception catch (e) {
+      return Left(Failure.database(message: e.toString()));
+    }
+  }
 }

@@ -59,6 +59,17 @@ class DocumentLocalDatasource {
     await _writeIndex(updated);
   }
 
+  Future<void> deleteAllDocuments() async {
+    final dir = await _getSignedDocsDir();
+    if (dir.existsSync()) {
+      await dir.delete(recursive: true);
+    }
+    final indexFile = await _getIndexFile();
+    if (indexFile.existsSync()) {
+      await indexFile.delete();
+    }
+  }
+
   Future<void> _writeIndex(List<DocumentModel> documents) async {
     final indexFile = await _getIndexFile();
     final jsonStr = jsonEncode(documents.map((d) => d.toJson()).toList());
