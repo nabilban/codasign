@@ -31,6 +31,7 @@ class SignatureCanvas extends StatelessWidget {
           children: [
             Signature(
               controller: controller,
+              backgroundColor: Colors.white,
             ),
             Positioned(
               left: 20,
