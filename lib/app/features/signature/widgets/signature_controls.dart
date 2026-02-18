@@ -45,12 +45,14 @@ class SignatureControls extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              content: SizedBox(
-                width: double.maxFinite,
-                child: ColorPicker(
-                  color: pickedColor,
-                  onChanged: (value) =>
-                      setDialogState(() => pickedColor = value),
+              content: SingleChildScrollView(
+                child: SizedBox(
+                  width: double.maxFinite,
+                  child: ColorPicker(
+                    color: pickedColor,
+                    onChanged: (value) =>
+                        setDialogState(() => pickedColor = value),
+                  ),
                 ),
               ),
               actions: [
@@ -107,7 +109,7 @@ class SignatureControls extends StatelessWidget {
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 4),
           Row(
             children: [
               _ColorOption(
@@ -136,7 +138,7 @@ class SignatureControls extends StatelessWidget {
                 child: GestureDetector(
                   onTap: () => _openColorPicker(context),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    padding: const EdgeInsets.symmetric(vertical: 4),
                     decoration: BoxDecoration(
                       color: _isCustomColor
                           ? selectedColor.withValues(alpha: 0.15)
@@ -145,9 +147,7 @@ class SignatureControls extends StatelessWidget {
                       border: Border.all(
                         color: _isCustomColor
                             ? selectedColor
-                            : theme.colorScheme.onSurface.withValues(
-                                alpha: 0.2,
-                              ),
+                            : Colors.transparent,
                         width: 1.5,
                       ),
                     ),
@@ -259,7 +259,7 @@ class _ColorOption extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          padding: const EdgeInsets.symmetric(vertical: 4),
           decoration: BoxDecoration(
             color: isSelected
                 ? color.withValues(alpha: 0.1)
@@ -317,7 +317,7 @@ class _ThicknessOption extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          padding: const EdgeInsets.symmetric(vertical: 4),
           decoration: BoxDecoration(
             color: isSelected
                 ? theme.colorScheme.primary.withValues(alpha: 0.1)

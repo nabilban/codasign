@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:codasign/app/ui/colors.dart';
 import 'package:codasign/core/domain/models/saved_signature.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 class SignaturePreviewDialog extends StatelessWidget {
   const SignaturePreviewDialog({
@@ -38,6 +39,7 @@ class SignaturePreviewDialog extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -64,20 +66,46 @@ class SignaturePreviewDialog extends StatelessWidget {
             ],
           ),
         ),
-        IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              onPressed: () {
+                final file = XFile(signature.filePath);
+                Share.shareXFiles(
+                  [file],
+                  text: 'Signature: ${signature.name}',
+                );
+              },
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.share_outlined,
+                  color: theme.colorScheme.primary,
+                  size: 20,
+                ),
+              ),
             ),
-            child: const Icon(
-              Icons.close,
-              color: Colors.white,
-              size: 20,
+            IconButton(
+              onPressed: () => Navigator.pop(context),
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.close,
+                  color: theme.colorScheme.primary,
+                  size: 20,
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ],
     );
@@ -122,28 +150,29 @@ class SignaturePreviewDialog extends StatelessWidget {
   }
 
   Widget _buildFooter(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
+        color: theme.colorScheme.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(100),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
+          color: theme.colorScheme.primary.withValues(alpha: 0.1),
         ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(
+          Icon(
             Icons.zoom_in_outlined,
-            color: Colors.white70,
+            color: theme.colorScheme.primary.withValues(alpha: 0.7),
             size: 16,
           ),
           const SizedBox(width: 8),
           Text(
             'Pinch to zoom',
             style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.7),
+              color: theme.colorScheme.primary.withValues(alpha: 0.7),
               fontSize: 12,
               fontWeight: FontWeight.w500,
             ),

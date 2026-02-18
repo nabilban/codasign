@@ -127,11 +127,11 @@ class _CreateSignaturePageState extends State<CreateSignaturePage> {
                     _buildHeader(context),
                     Expanded(
                       child: SingleChildScrollView(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Column(
                           children: [
                             SignatureCanvas(controller: _controller),
-                            const SizedBox(height: 24),
+                            const SizedBox(height: 16),
                             SignatureControls(
                               selectedColor: state.penColor,
                               selectedThickness: state.penStrokeWidth,
@@ -142,9 +142,9 @@ class _CreateSignaturePageState extends State<CreateSignaturePage> {
                                   .read<SignatureCubit>()
                                   .changePenThickness(thickness),
                             ),
-                            const SizedBox(height: 24),
+                            const SizedBox(height: 16),
                             _buildActions(context, state),
-                            const SizedBox(height: 24),
+                            const SizedBox(height: 16),
                           ],
                         ),
                       ),
@@ -171,7 +171,7 @@ class _CreateSignaturePageState extends State<CreateSignaturePage> {
   Widget _buildHeader(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

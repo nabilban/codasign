@@ -76,7 +76,7 @@ class PDFSigningCubit extends Cubit<PDFSigningState> {
 
       // 3. Apply offset for UI padding (8px)
       // The user places the container, but the image is padded inside by 8px.
-      // We need to shift the baked position to match the image's visual location.
+      // We shift the baked position to match the image visual location.
       final uiPaddingOffset = 8 * state.signatureScale * scaleRatio;
 
       // 4. Map coordinates to PDF points using calculated scale and offsets

@@ -248,7 +248,7 @@ class _HomeSignatureCard extends StatelessWidget {
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.2),
+                  color: Colors.white.withValues(alpha: 0.7),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: ClipRRect(
@@ -540,19 +540,7 @@ class _SignedDocumentCard extends StatelessWidget {
                   ),
                   tooltip: 'Share',
                 ),
-                IconButton(
-                  onPressed: () {
-                    context.read<SignedDocumentsCubit>().removeDocument(
-                      document.id,
-                    );
-                  },
-                  icon: Icon(
-                    Icons.delete_outline,
-                    color: theme.colorScheme.primary.withValues(alpha: 0.7),
-                    size: 20,
-                  ),
-                  tooltip: 'Delete',
-                ),
+                // Delete button removed for safety on Home page
               ],
             ),
           ],

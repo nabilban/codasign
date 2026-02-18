@@ -1,14 +1,13 @@
 import 'package:codasign/app/features/document/pages/signed_document_preview_page.dart';
 import 'package:codasign/app/features/home/cubit/signed_documents_cubit.dart';
 import 'package:codasign/app/features/home/cubit/signed_documents_state.dart';
+import 'package:codasign/app/features/home/widgets/home_bottom_widgets.dart';
 import 'package:codasign/app/ui/colors.dart';
 import 'package:codasign/core/domain/models/document_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
-
-import 'package:codasign/app/features/home/widgets/home_bottom_widgets.dart';
 
 class SignedDocumentsLibraryPage extends StatelessWidget {
   const SignedDocumentsLibraryPage({super.key});
@@ -57,6 +56,7 @@ class SignedDocumentsLibraryPage extends StatelessWidget {
                         top: 20,
                         left: 20,
                         right: 20,
+                        bottom: 40,
                       ),
                       itemCount: state.documents.length,
                       separatorBuilder: (context, index) =>
@@ -81,7 +81,7 @@ class _LibraryHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
       child: Row(
         children: [
           IconButton(
@@ -201,17 +201,17 @@ class _LibraryDocumentCard extends StatelessWidget {
                       file,
                     ], text: 'Signed Document: ${document.name}');
                   },
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.share_outlined,
-                    color: Colors.white70,
+                    color: theme.colorScheme.primary,
                     size: 20,
                   ),
                 ),
                 IconButton(
                   onPressed: () => _confirmDelete(context),
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.delete_outline,
-                    color: Colors.redAccent,
+                    color: theme.colorScheme.error,
                     size: 20,
                   ),
                 ),
@@ -234,7 +234,8 @@ class _LibraryDocumentCard extends StatelessWidget {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         content: const Text(
-          'This action will permanently remove this signed document from your history.',
+          'This action will permanently remove this signed document from '
+          'your history.',
           style: TextStyle(color: Colors.white70),
         ),
         actions: [
