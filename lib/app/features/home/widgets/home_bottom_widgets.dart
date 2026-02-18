@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:codasign/app/features/home/cubit/saved_signatures_cubit.dart';
 import 'package:codasign/app/features/home/cubit/saved_signatures_state.dart';
 import 'package:codasign/app/features/signature/pages/signature_library_page.dart';
+import 'package:codasign/app/features/signature/widgets/signature_preview_dialog.dart';
 import 'package:codasign/app/ui/colors.dart';
 import 'package:codasign/core/domain/models/saved_signature.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,7 @@ class SectionHeader extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          TextButton(
+          OutlinedButton(
             onPressed: () {
               final cubit = context.read<SavedSignaturesCubit>();
               Navigator.push(
@@ -44,6 +45,15 @@ class SectionHeader extends StatelessWidget {
                 ),
               );
             },
+            style: OutlinedButton.styleFrom(
+              side: BorderSide(
+                color: theme.colorScheme.primary.withValues(alpha: 0.5),
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            ),
             child: Text(
               'View All',
               style: theme.textTheme.labelLarge?.copyWith(
@@ -195,6 +205,7 @@ class _SignatureCard extends StatelessWidget {
     final dateStr = DateFormat('MMM d, yyyy').format(signature.createdAt);
 
     return GestureDetector(
+      onTap: () => SignaturePreviewDialog.show(context, signature),
       onLongPress: () => _confirmDelete(context),
       child: Container(
         width: 130,
