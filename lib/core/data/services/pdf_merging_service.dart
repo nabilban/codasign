@@ -14,7 +14,7 @@ class PdfMergingService {
   /// [y]: Y coordinate in PDF points
   /// [width]: Width in PDF points
   /// [height]: Height in PDF points
-  Future<void> bakeSignature({
+  Future<int> bakeSignature({
     required String inputPath,
     required String outputPath,
     required String signaturePath,
@@ -26,6 +26,7 @@ class PdfMergingService {
   }) async {
     final bytes = await File(inputPath).readAsBytes();
     final document = PdfDocument(inputBytes: bytes);
+    final pageCount = document.pages.count;
 
     try {
       if (pageIndex > document.pages.count || pageIndex < 1) {
@@ -36,6 +37,7 @@ class PdfMergingService {
       final signatureBytes = await File(signaturePath).readAsBytes();
       final bitmap = PdfBitmap(signatureBytes);
 
+      // Draw signature
       page.graphics.drawImage(
         bitmap,
         Rect.fromLTWH(x, y, width, height),
@@ -43,6 +45,8 @@ class PdfMergingService {
 
       final signedBytes = await document.save();
       await File(outputPath).writeAsBytes(signedBytes);
+
+      return pageCount;
     } finally {
       document.dispose();
     }

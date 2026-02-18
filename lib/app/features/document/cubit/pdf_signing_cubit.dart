@@ -61,8 +61,8 @@ class PDFSigningCubit extends Cubit<PDFSigningState> {
       final bakedHeight = 80 * state.signatureScale * heightRatio;
       final bakedWidth = bakedHeight * 2;
 
-      // 3. Bake signature into PDF
-      await mergingService.bakeSignature(
+      // 3. Bake signature into PDF and get page count
+      final pageCount = await mergingService.bakeSignature(
         inputPath: state.document.path,
         outputPath: tempPath,
         signaturePath: state.selectedSignature!.filePath,
@@ -77,6 +77,7 @@ class PDFSigningCubit extends Cubit<PDFSigningState> {
       final signedDoc = state.document.copyWith(
         path: tempPath,
         createdAt: DateTime.now(),
+        pageCount: pageCount,
       );
 
       final result = await repository.saveSignedDocument(signedDoc);

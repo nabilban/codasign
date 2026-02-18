@@ -29,7 +29,7 @@ class StatsSection extends StatelessWidget {
         );
 
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 24),
+          padding: const EdgeInsets.symmetric(vertical: 8),
           child: Row(
             children: [
               _StatCard(
@@ -68,14 +68,15 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.05),
+          color: AppColors.surfaceAlpha,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: color.withValues(alpha: 0.2),
+            color: theme.colorScheme.primary.withValues(alpha: 0.2),
           ),
         ),
         child: Column(
@@ -227,6 +228,7 @@ class _HomeSignatureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return GestureDetector(
       onTap: () => SignaturePreviewDialog.show(context, signature),
       child: Container(
@@ -237,7 +239,7 @@ class _HomeSignatureCard extends StatelessWidget {
           color: AppColors.surfaceAlpha,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: Colors.white.withValues(alpha: 0.1),
+            color: theme.colorScheme.primary.withValues(alpha: 0.2),
           ),
         ),
         child: Column(

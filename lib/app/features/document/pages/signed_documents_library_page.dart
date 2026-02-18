@@ -17,6 +17,7 @@ class SignedDocumentsLibraryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -52,10 +53,14 @@ class SignedDocumentsLibraryPage extends StatelessWidget {
                     }
 
                     return ListView.separated(
-                      padding: const EdgeInsets.all(20),
+                      padding: const EdgeInsets.only(
+                        top: 20,
+                        left: 20,
+                        right: 20,
+                      ),
                       itemCount: state.documents.length,
                       separatorBuilder: (context, index) =>
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 8),
                       itemBuilder: (context, index) => _LibraryDocumentCard(
                         document: state.documents[index],
                       ),
@@ -134,7 +139,7 @@ class _LibraryDocumentCard extends StatelessWidget {
           color: AppColors.surfaceAlpha,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+            color: theme.colorScheme.primary.withValues(alpha: 0.2),
           ),
         ),
         child: Row(

@@ -16,6 +16,7 @@ class SignatureLibraryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -149,7 +150,7 @@ class _LibrarySignatureCard extends StatelessWidget {
           color: AppColors.surfaceAlpha,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+            color: theme.colorScheme.primary.withValues(alpha: 0.2),
           ),
         ),
         child: Column(
