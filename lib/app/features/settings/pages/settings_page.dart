@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:codasign/app/features/home/cubit/saved_signatures_cubit.dart';
 import 'package:codasign/app/features/home/cubit/signed_documents_cubit.dart';
 import 'package:codasign/app/ui/colors.dart';
@@ -14,74 +15,138 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: const Text('Settings'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-      ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF0D1B2A),
-              Color(0xFF1B263B),
-            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            stops: [0.0, 0.5, 1.0],
+            colors: AppColors.backgroundGradient,
           ),
         ),
         child: SafeArea(
-          child: ListView(
-            padding: const EdgeInsets.all(24),
+          child: Column(
             children: [
-              _buildSectionHeader(context, 'Data Management'),
-              const SizedBox(height: 16),
-              _buildSettingsTile(
-                context,
-                icon: Icons.delete_sweep_outlined,
-                title: 'Clear All Data',
-                subtitle: 'Remove all signatures and signed documents',
-                onTap: () => _confirmClearAll(context),
-                isDestructive: true,
-              ),
-              const SizedBox(height: 32),
-              _buildSectionHeader(context, 'General'),
-              const SizedBox(height: 16),
-              _buildSettingsTile(
-                context,
-                icon: Icons.language_outlined,
-                title: 'Language',
-                subtitle: 'Coming soon',
-                enabled: false,
-                onTap: () {},
-              ),
-              const SizedBox(height: 16),
-              _buildSettingsTile(
-                context,
-                icon: Icons.info_outline,
-                title: 'About CodaSign',
-                subtitle: 'Version 1.0.0',
-                onTap: () {},
-              ),
-              if (kDebugMode) ...[
-                const SizedBox(height: 32),
-                _buildSectionHeader(context, 'Developer Tools'),
-                const SizedBox(height: 16),
-                _buildSettingsTile(
-                  context,
-                  icon: Icons.bug_report_outlined,
-                  title: 'Print All Files',
-                  subtitle: 'List all items in Documents directory',
-                  onTap: () => _printAllFiles(context),
+              _buildHeader(context),
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 8,
+                  ),
+                  children: [
+                    _buildSectionHeader(context, 'Data Management'),
+                    const SizedBox(height: 16),
+                    _buildSettingsTile(
+                      context,
+                      icon: Icons.delete_sweep_outlined,
+                      title: 'Clear All Data',
+                      subtitle: 'Remove all signatures and signed documents',
+                      onTap: () => _confirmClearAll(context),
+                      isDestructive: true,
+                    ),
+                    const SizedBox(height: 32),
+                    _buildSectionHeader(context, 'General'),
+                    const SizedBox(height: 16),
+                    _buildSettingsTile(
+                      context,
+                      icon: Icons.language_outlined,
+                      title: 'Language',
+                      subtitle: 'Coming soon',
+                      enabled: false,
+                      onTap: () {},
+                    ),
+                    const SizedBox(height: 16),
+                    _buildSettingsTile(
+                      context,
+                      icon: Icons.info_outline,
+                      title: 'About CodaSign',
+                      subtitle: 'Version 1.0.0',
+                      onTap: () {},
+                    ),
+                    if (kDebugMode) ...[
+                      const SizedBox(height: 32),
+                      _buildSectionHeader(context, 'Developer Tools'),
+                      const SizedBox(height: 16),
+                      _buildSettingsTile(
+                        context,
+                        icon: Icons.bug_report_outlined,
+                        title: 'Print All Files',
+                        subtitle:
+                            'List all items in Documents and '
+                            'Signatures directory',
+                        onTap: () => _printAllFiles(context),
+                      ),
+                      // const SizedBox(height: 16),
+                      // _buildSettingsTile(
+                      //   context,
+                      //   icon: Icons.folder_open_outlined,
+                      //   title: 'Open Documents Folder',
+                      //   subtitle: 'Access app files in system explorer',
+                      //   onTap: () => _openDocumentsDir(context),
+                      // ),
+                    ],
+                    const SizedBox(height: 40),
+                  ],
                 ),
-              ],
+              ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 10,
+      ),
+      child: Row(
+        children: [
+          IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+                ),
+              ),
+              child: Icon(
+                Icons.arrow_back,
+                color: theme.colorScheme.onSurface,
+                size: 20,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Settings',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.onSurface,
+                ),
+              ),
+              Text(
+                'App configuration & data',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurface,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -120,49 +185,55 @@ class SettingsPage extends StatelessWidget {
                 : theme.colorScheme.primary.withValues(alpha: 0.1),
           ),
         ),
-        child: ListTile(
-          onTap: enabled ? onTap : null,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 8,
-          ),
-          leading: Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: isDestructive
-                  ? theme.colorScheme.error.withValues(alpha: 0.1)
-                  : theme.colorScheme.primary.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              icon,
-              color: isDestructive
-                  ? theme.colorScheme.error
-                  : theme.colorScheme.primary,
-              size: 24,
-            ),
-          ),
-          title: Text(
-            title,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: isDestructive
-                  ? theme.colorScheme.error
-                  : theme.colorScheme.onSurface,
-            ),
-          ),
-          subtitle: Text(
-            subtitle,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-          trailing: enabled
-              ? Icon(
-                  Icons.chevron_right,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: enabled ? onTap : null,
+            borderRadius: BorderRadius.circular(16),
+            child: ListTile(
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 8,
+              ),
+              leading: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: isDestructive
+                      ? theme.colorScheme.error.withValues(alpha: 0.1)
+                      : theme.colorScheme.primary.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  icon,
+                  color: isDestructive
+                      ? theme.colorScheme.error
+                      : theme.colorScheme.primary,
+                  size: 24,
+                ),
+              ),
+              title: Text(
+                title,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: isDestructive
+                      ? theme.colorScheme.error
+                      : theme.colorScheme.onSurface,
+                ),
+              ),
+              subtitle: Text(
+                subtitle,
+                style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
-                )
-              : null,
+                ),
+              ),
+              trailing: enabled
+                  ? Icon(
+                      Icons.chevron_right,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    )
+                  : null,
+            ),
+          ),
         ),
       ),
     );
@@ -223,9 +294,12 @@ class SettingsPage extends StatelessWidget {
   Future<void> _printAllFiles(BuildContext context) async {
     try {
       final appDir = await getApplicationDocumentsDirectory();
-      final entities = appDir.listSync(recursive: true);
+      final entities = appDir.listSync(recursive: true).where((entity) {
+        final path = entity.path;
+        return path.contains('/Signatures') || path.contains('/Documents');
+      }).toList();
 
-      debugPrint('--- DEBBUG: APPLICATION DOCUMENTS DIRECTORY ---');
+      debugPrint('--- DEBUG: SIGNATURES & DOCUMENTS DIRECTORIES ---');
       debugPrint('Path: ${appDir.path}');
       debugPrint('Total items: ${entities.length}');
 
@@ -255,7 +329,7 @@ class SettingsPage extends StatelessWidget {
           ),
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

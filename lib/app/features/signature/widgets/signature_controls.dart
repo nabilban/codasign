@@ -49,6 +49,7 @@ class SignatureControls extends StatelessWidget {
                 child: SizedBox(
                   width: double.maxFinite,
                   child: ColorPicker(
+                    initialPicker: Picker.hsv,
                     color: pickedColor,
                     onChanged: (value) =>
                         setDialogState(() => pickedColor = value),
