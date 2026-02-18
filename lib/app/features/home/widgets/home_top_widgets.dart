@@ -7,6 +7,7 @@ class HeaderSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 24),
       child: Row(
@@ -17,16 +18,16 @@ class HeaderSection extends StatelessWidget {
             children: [
               Text(
                 'CodaSign',
-                style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                style: theme.textTheme.displaySmall?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: theme.colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 4),
               Text(
                 'Manage your signatures & documents',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.textSecondary,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
             ],
@@ -36,15 +37,15 @@ class HeaderSection extends StatelessWidget {
             icon: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
+                color: theme.colorScheme.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: AppColors.primary.withValues(alpha: 0.2),
+                  color: theme.colorScheme.primary.withValues(alpha: 0.2),
                 ),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.settings_outlined,
-                color: AppColors.primary,
+                color: theme.colorScheme.primary,
                 size: 20,
               ),
             ),
@@ -69,6 +70,7 @@ class QuickActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
@@ -77,7 +79,9 @@ class QuickActionCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.surfaceAlpha,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+            border: Border.all(
+              color: theme.colorScheme.primary.withValues(alpha: 0.2),
+            ),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -93,7 +97,7 @@ class QuickActionCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.4),
+                      color: theme.colorScheme.primary.withValues(alpha: 0.4),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -101,17 +105,16 @@ class QuickActionCard extends StatelessWidget {
                 ),
                 child: Icon(
                   icon,
-                  color: Colors.white,
+                  color: theme.colorScheme.onPrimary,
                   size: 28,
                 ),
               ),
               const SizedBox(height: 16),
               Text(
                 title,
-                style: const TextStyle(
+                style: theme.textTheme.labelLarge?.copyWith(
                   fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                  color: AppColors.primary,
+                  color: theme.colorScheme.primary,
                 ),
               ),
             ],

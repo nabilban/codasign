@@ -17,22 +17,24 @@ class SignatureControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppColors.surfaceAlpha,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Pen Color',
-            style: TextStyle(
-              fontSize: 12,
+            style: theme.textTheme.labelSmall?.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.textSecondary,
+              color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 12),
@@ -61,12 +63,11 @@ class SignatureControls extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          const Text(
+          Text(
             'Pen Thickness',
-            style: TextStyle(
-              fontSize: 12,
+            style: theme.textTheme.labelSmall?.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.textSecondary,
+              color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 12),
@@ -115,6 +116,7 @@ class _ColorOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
@@ -123,10 +125,12 @@ class _ColorOption extends StatelessWidget {
           decoration: BoxDecoration(
             color: isSelected
                 ? color.withValues(alpha: 0.1)
-                : AppColors.surface,
+                : theme.colorScheme.surface,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isSelected ? AppColors.primary : Colors.transparent,
+              color: isSelected
+                  ? theme.colorScheme.primary
+                  : Colors.transparent,
               width: 1.5,
             ),
           ),
@@ -143,8 +147,7 @@ class _ColorOption extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 label,
-                style: const TextStyle(
-                  fontSize: 12,
+                style: theme.textTheme.labelSmall?.copyWith(
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -171,6 +174,7 @@ class _ThicknessOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
@@ -178,11 +182,13 @@ class _ThicknessOption extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
             color: isSelected
-                ? AppColors.primary.withValues(alpha: 0.1)
-                : AppColors.surface,
+                ? theme.colorScheme.primary.withValues(alpha: 0.1)
+                : theme.colorScheme.surface,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isSelected ? AppColors.primary : Colors.transparent,
+              color: isSelected
+                  ? theme.colorScheme.primary
+                  : Colors.transparent,
               width: 1.5,
             ),
           ),
@@ -195,8 +201,8 @@ class _ThicknessOption extends StatelessWidget {
                 child: Container(
                   width: 4 + thickness,
                   height: 4 + thickness,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.onSurface,
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -204,8 +210,7 @@ class _ThicknessOption extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 label,
-                style: const TextStyle(
-                  fontSize: 12,
+                style: theme.textTheme.labelSmall?.copyWith(
                   fontWeight: FontWeight.w500,
                 ),
               ),

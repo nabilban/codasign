@@ -11,6 +11,7 @@ class SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: Row(
@@ -18,17 +19,16 @@ class SectionHeader extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 18,
+            style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
           TextButton(
             onPressed: () {},
-            child: const Text(
+            child: Text(
               'View All',
-              style: TextStyle(
-                color: AppColors.primary,
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: theme.colorScheme.primary,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -44,6 +44,7 @@ class SignaturesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Column(
       children: [
         const SectionHeader(title: 'My Signatures'),
@@ -61,15 +62,14 @@ class SignaturesSection extends StatelessWidget {
               Icon(
                 Icons.edit_note_outlined,
                 size: 48,
-                color: Colors.white.withValues(alpha: 0.2),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
               ),
               const SizedBox(height: 12),
               Text(
                 'No signatures yet. Create one to get\nstarted!',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.4),
-                  fontSize: 14,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                 ),
               ),
             ],
@@ -92,13 +92,16 @@ class DocumentItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.surfaceAlpha,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.primary.withValues(alpha: 0.1)),
+        border: Border.all(
+          color: theme.colorScheme.primary.withValues(alpha: 0.1),
+        ),
       ),
       child: Row(
         children: [
@@ -112,9 +115,9 @@ class DocumentItem extends StatelessWidget {
               ),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.assignment_turned_in_outlined,
-              color: Colors.white,
+              color: theme.colorScheme.onPrimary,
               size: 20,
             ),
           ),
@@ -125,17 +128,15 @@ class DocumentItem extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: theme.textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w600,
-                    fontSize: 14,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.4),
-                    fontSize: 12,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                   ),
                 ),
               ],
@@ -143,7 +144,7 @@ class DocumentItem extends StatelessWidget {
           ),
           Icon(
             Icons.chevron_right,
-            color: Colors.white.withValues(alpha: 0.2),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
           ),
         ],
       ),

@@ -91,6 +91,7 @@ class _CreateSignaturePageState extends State<CreateSignaturePage> {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Row(
@@ -101,23 +102,24 @@ class _CreateSignaturePageState extends State<CreateSignaturePage> {
             icon: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.05),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                border: Border.all(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+                ),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.arrow_back,
-                color: Colors.white,
+                color: theme.colorScheme.onSurface,
                 size: 20,
               ),
             ),
           ),
-          const Text(
+          Text(
             'Create Signature',
-            style: TextStyle(
-              fontSize: 18,
+            style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: theme.colorScheme.onSurface,
             ),
           ),
           const SizedBox(width: 48), // Spacer for centering
@@ -127,6 +129,7 @@ class _CreateSignaturePageState extends State<CreateSignaturePage> {
   }
 
   Widget _buildActions(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       children: [
         Expanded(
@@ -136,9 +139,11 @@ class _CreateSignaturePageState extends State<CreateSignaturePage> {
             icon: const Icon(Icons.refresh, size: 20),
             label: const Text('Clear'),
             style: OutlinedButton.styleFrom(
-              foregroundColor: Colors.white,
+              foregroundColor: theme.colorScheme.onSurface,
               padding: const EdgeInsets.symmetric(vertical: 16),
-              side: BorderSide(color: Colors.white.withValues(alpha: 0.2)),
+              side: BorderSide(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
+              ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -156,7 +161,7 @@ class _CreateSignaturePageState extends State<CreateSignaturePage> {
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.3),
+                  color: theme.colorScheme.primary.withValues(alpha: 0.3),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -170,7 +175,7 @@ class _CreateSignaturePageState extends State<CreateSignaturePage> {
               label: const Text('Save Signature'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.transparent,
-                foregroundColor: Colors.white,
+                foregroundColor: theme.colorScheme.onPrimary,
                 shadowColor: Colors.transparent,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(

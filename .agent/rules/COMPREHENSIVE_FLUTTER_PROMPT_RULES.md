@@ -411,3 +411,54 @@ blocTest<FeatureCubit, FeatureState>(
 - ❌ Ignore deprecation notices
 
 **Source**: LiList Project Analysis | **Purpose**: Reusable Flutter Standards
+
+## 15. UI Responsiveness & Theme Uniformity
+
+This is a **mandatory** rule. All UI code must follow these standards to ensure a consistent look and feel across all screen sizes and theme configurations.
+
+**DO:**
+
+- ✅ **Always** use `Theme.of(context)` to access colors, text styles, and other theme properties instead of hardcoding values
+- ✅ **Always** use `MediaQuery.of(context)` (or `MediaQuery.sizeOf(context)`) for screen-size-dependent layouts
+- ✅ Use `Theme.of(context).colorScheme` for semantic colors (e.g., `primary`, `surface`, `onPrimary`)
+- ✅ Use `Theme.of(context).textTheme` for all text styles (e.g., `bodyMedium`, `titleLarge`)
+- ✅ Use `LayoutBuilder` for widget-level responsive constraints
+
+**DON'T:**
+
+- ❌ **Never** hardcode colors (e.g., `Color(0xFF...)`) directly in widget files — define them in `AppColors` or the theme
+- ❌ **Never** hardcode font sizes or text styles directly in widgets — use `Theme.of(context).textTheme`
+- ❌ **Never** use fixed pixel dimensions for layout without considering screen size via `MediaQuery`
+
+**Example — Correct Usage:**
+
+```dart
+@override
+Widget build(BuildContext context) {
+  final theme = Theme.of(context);
+  final size = MediaQuery.sizeOf(context);
+
+  return Container(
+    width: size.width * 0.9,
+    padding: const EdgeInsets.all(16),
+    color: theme.colorScheme.surface,
+    child: Text(
+      'Hello',
+      style: theme.textTheme.bodyLarge?.copyWith(
+        color: theme.colorScheme.onSurface,
+      ),
+    ),
+  );
+}
+```
+
+**Example — Incorrect Usage:**
+
+```dart
+// ❌ BAD: Hardcoded color and size
+Container(
+  width: 360,
+  color: Color(0xFF1B263B),
+  child: Text('Hello', style: TextStyle(fontSize: 16, color: Colors.white)),
+)
+```

@@ -42,8 +42,6 @@ class SignatureCanvas extends StatelessWidget {
                   border: Border(
                     bottom: BorderSide(
                       color: Colors.black.withValues(alpha: 0.1),
-                      width: 1,
-                      style: BorderStyle.solid,
                     ),
                   ),
                 ),
