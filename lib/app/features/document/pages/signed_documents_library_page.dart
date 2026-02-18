@@ -8,6 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 
+import 'package:codasign/app/features/home/widgets/home_bottom_widgets.dart';
+
 class SignedDocumentsLibraryPage extends StatelessWidget {
   const SignedDocumentsLibraryPage({super.key});
 
@@ -27,11 +29,17 @@ class SignedDocumentsLibraryPage extends StatelessWidget {
           child: Column(
             children: [
               _LibraryHeader(),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: StatsSection(),
+              ),
               Expanded(
                 child: BlocBuilder<SignedDocumentsCubit, SignedDocumentsState>(
                   builder: (context, state) {
                     if (state.isLoading) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
                     }
 
                     if (state.documents.isEmpty) {
@@ -132,15 +140,26 @@ class _LibraryDocumentCard extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [AppColors.primary, AppColors.secondary],
+                ),
                 borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.description_rounded,
-                color: AppColors.primary,
-                size: 24,
+                color: theme.colorScheme.onPrimary,
+                size: 22,
               ),
             ),
             const SizedBox(width: 16),

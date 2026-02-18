@@ -23,7 +23,10 @@ class StatsSection extends StatelessWidget {
     return BlocBuilder<SignedDocumentsCubit, SignedDocumentsState>(
       builder: (context, state) {
         final totalSigned = state.documents.length;
-        final totalPages = state.documents.length * 2;
+        final totalPages = state.documents.fold<int>(
+          0,
+          (sum, doc) => sum + doc.pageCount,
+        );
 
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 24),
@@ -118,7 +121,7 @@ class SignaturesSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 32),
+        const SizedBox(height: 24),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -162,7 +165,7 @@ class SignaturesSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 4),
         BlocBuilder<SavedSignaturesCubit, SavedSignaturesState>(
           builder: (context, state) {
             if (state.isLoading) {
@@ -228,7 +231,7 @@ class _HomeSignatureCard extends StatelessWidget {
       onTap: () => SignaturePreviewDialog.show(context, signature),
       child: Container(
         width: 140,
-        margin: const EdgeInsets.only(right: 16),
+        margin: const EdgeInsets.only(right: 8),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: AppColors.surfaceAlpha,
@@ -283,7 +286,7 @@ class DocumentsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 32),
+        const SizedBox(height: 24),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -294,19 +297,17 @@ class DocumentsSection extends StatelessWidget {
                 color: theme.colorScheme.onSurface,
               ),
             ),
-            TextButton(
-              onPressed: () {
-                final cubit = context.read<SignedDocumentsCubit>();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (context) => BlocProvider.value(
-                      value: cubit,
-                      child: const SignedDocumentsLibraryPage(),
-                    ),
-                  ),
-                );
-              },
+            OutlinedButton(
+              onPressed: () => _navigateToLibrary(context),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+              ),
               child: Text(
                 'View All',
                 style: TextStyle(
@@ -318,7 +319,7 @@ class DocumentsSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 4),
         BlocBuilder<SignedDocumentsCubit, SignedDocumentsState>(
           builder: (context, state) {
             if (state.isLoading) {
@@ -329,20 +330,84 @@ class DocumentsSection extends StatelessWidget {
               return _buildDocEmptyState(context);
             }
 
-            return ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: state.documents.length > 3
-                  ? 3
-                  : state.documents.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 12),
-              itemBuilder: (context, index) {
-                return _SignedDocumentCard(document: state.documents[index]);
-              },
+            final totalCount = state.documents.length;
+            const maxVisible = 3;
+            final visibleCount = totalCount > maxVisible
+                ? maxVisible
+                : totalCount;
+            final remainingCount = totalCount - visibleCount;
+
+            return Column(
+              children: [
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: visibleCount,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 8),
+                  itemBuilder: (context, index) {
+                    return _SignedDocumentCard(
+                      document: state.documents[index],
+                    );
+                  },
+                ),
+                if (remainingCount > 0) ...[
+                  const SizedBox(height: 8),
+                  GestureDetector(
+                    onTap: () => _navigateToLibrary(context),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 14,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceAlpha,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: theme.colorScheme.primary.withValues(
+                            alpha: 0.2,
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.add_rounded,
+                            color: theme.colorScheme.primary,
+                            size: 18,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            '$remainingCount more entries',
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              color: theme.colorScheme.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ],
             );
           },
         ),
       ],
+    );
+  }
+
+  void _navigateToLibrary(BuildContext context) {
+    final cubit = context.read<SignedDocumentsCubit>();
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (context) => BlocProvider.value(
+          value: cubit,
+          child: const SignedDocumentsLibraryPage(),
+        ),
+      ),
     );
   }
 
@@ -399,24 +464,36 @@ class _SignedDocumentCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.05),
+          color: AppColors.surfaceAlpha,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: Colors.white.withValues(alpha: 0.1),
+            color: theme.colorScheme.primary.withValues(alpha: 0.15),
           ),
         ),
         child: Row(
           children: [
+            // Gradient icon matching QuickActionCard style
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [AppColors.primary, AppColors.secondary],
+                ),
                 borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.description_rounded,
-                color: AppColors.primary,
-                size: 24,
+                color: theme.colorScheme.onPrimary,
+                size: 22,
               ),
             ),
             const SizedBox(width: 16),
@@ -428,7 +505,7 @@ class _SignedDocumentCard extends StatelessWidget {
                     document.name,
                     style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: theme.colorScheme.onSurface,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -436,26 +513,27 @@ class _SignedDocumentCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     'Signed on $dateStr',
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.5),
-                      fontSize: 12,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
                   ),
                 ],
               ),
             ),
             Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
                   onPressed: () {
                     final file = XFile(document.path);
-                    Share.shareXFiles([
-                      file,
-                    ], text: 'Signed Document: ${document.name}');
+                    Share.shareXFiles(
+                      [file],
+                      text: 'Signed Document: ${document.name}',
+                    );
                   },
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.share_outlined,
-                    color: Colors.white70,
+                    color: theme.colorScheme.primary,
                     size: 20,
                   ),
                   tooltip: 'Share',
@@ -466,9 +544,9 @@ class _SignedDocumentCard extends StatelessWidget {
                       document.id,
                     );
                   },
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.delete_outline,
-                    color: Colors.redAccent,
+                    color: theme.colorScheme.primary.withValues(alpha: 0.7),
                     size: 20,
                   ),
                   tooltip: 'Delete',

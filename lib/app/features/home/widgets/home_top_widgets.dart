@@ -14,7 +14,7 @@ class HeaderSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 24),
+      padding: const EdgeInsets.symmetric(vertical: 14),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -153,7 +153,7 @@ class QuickActionsSection extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: 8),
         QuickActionCard(
           icon: Icons.description_outlined,
           title: 'Sign Document',

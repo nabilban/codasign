@@ -43,7 +43,6 @@ class HomePage extends StatelessWidget {
                 children: [
                   HeaderSection(),
                   QuickActionsSection(),
-                  StatsSection(),
                   SignaturesSection(),
                   DocumentsSection(),
                   SizedBox(height: 24),
