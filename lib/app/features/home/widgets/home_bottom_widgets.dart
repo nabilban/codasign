@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:codasign/app/features/home/cubit/saved_signatures_cubit.dart';
 import 'package:codasign/app/features/home/cubit/saved_signatures_state.dart';
+import 'package:codasign/app/features/signature/pages/signature_library_page.dart';
 import 'package:codasign/app/ui/colors.dart';
 import 'package:codasign/core/domain/models/saved_signature.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,18 @@ class SectionHeader extends StatelessWidget {
             ),
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              final cubit = context.read<SavedSignaturesCubit>();
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (context) => BlocProvider.value(
+                    value: cubit,
+                    child: const SignatureLibraryPage(),
+                  ),
+                ),
+              );
+            },
             child: Text(
               'View All',
               style: theme.textTheme.labelLarge?.copyWith(

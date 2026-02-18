@@ -1,6 +1,8 @@
+import 'package:codasign/app/features/home/cubit/saved_signatures_cubit.dart';
 import 'package:codasign/app/features/signature/pages/create_signature_page.dart';
 import 'package:codasign/app/ui/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HeaderSection extends StatelessWidget {
   const HeaderSection({super.key});
@@ -136,10 +138,14 @@ class QuickActionsSection extends StatelessWidget {
           icon: Icons.edit_outlined,
           title: 'Create Signature',
           onTap: () {
+            final cubit = context.read<SavedSignaturesCubit>();
             Navigator.push(
               context,
               MaterialPageRoute<void>(
-                builder: (context) => const CreateSignaturePage(),
+                builder: (context) => BlocProvider.value(
+                  value: cubit,
+                  child: const CreateSignaturePage(),
+                ),
               ),
             );
           },
