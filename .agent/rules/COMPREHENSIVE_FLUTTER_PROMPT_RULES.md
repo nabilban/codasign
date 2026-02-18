@@ -370,6 +370,7 @@ blocTest<FeatureCubit, FeatureState>(
 - ✅ Write tests (bloc_test)
 - ✅ Use const constructors
 - ✅ Follow null safety
+- ✅ Use l10n for all user-facing text
 - ✅ Document complex logic
 
 **DON'T:**
