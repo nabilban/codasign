@@ -1,7 +1,11 @@
+import 'dart:async';
+
+import 'package:codasign/app/features/home/cubit/saved_signatures_cubit.dart';
 import 'package:codasign/app/features/signature/cubit/signature_cubit.dart';
 import 'package:codasign/app/features/signature/cubit/signature_state.dart';
 import 'package:codasign/app/features/signature/widgets/signature_canvas.dart';
 import 'package:codasign/app/features/signature/widgets/signature_controls.dart';
+import 'package:codasign/app/providers/providers.dart';
 import 'package:codasign/app/ui/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,7 +24,10 @@ class _CreateSignaturePageState extends State<CreateSignaturePage> {
   @override
   void initState() {
     super.initState();
-    _controller = SignatureController();
+    _controller = SignatureController(
+      strokeCap: StrokeCap.round,
+      strokeJoin: StrokeJoin.round,
+    );
   }
 
   @override
@@ -29,16 +36,78 @@ class _CreateSignaturePageState extends State<CreateSignaturePage> {
     super.dispose();
   }
 
+  Future<void> _saveSignature(BuildContext context) async {
+    if (_controller.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please draw a signature first.')),
+      );
+      return;
+    }
+
+    final cubit = context.read<SignatureCubit>();
+
+    // Export with transparent background
+    final pngBytes = await _controller.toPngBytes();
+    if (pngBytes == null) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to export signature.')),
+        );
+      }
+      return;
+    }
+
+    final now = DateTime.now();
+    final name =
+        'Signature ${now.day.toString().padLeft(2, '0')}/${now.month.toString().padLeft(2, '0')}/${now.year}';
+
+    await cubit.saveSignature(bytes: pngBytes, name: name);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SignatureCubit(),
-      child: BlocBuilder<SignatureCubit, SignatureState>(
+      create: (context) => SignatureCubit(
+        repository: getIt(),
+      ),
+      child: BlocConsumer<SignatureCubit, SignatureState>(
+        listenWhen: (prev, curr) =>
+            prev.saveSuccess != curr.saveSuccess ||
+            prev.failure != curr.failure,
+        listener: (context, state) {
+          if (state.saveSuccess) {
+            // Refresh home list
+            try {
+              unawaited(context.read<SavedSignaturesCubit>().loadSignatures());
+            } on Exception catch (_) {}
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text('Signature saved!'),
+                backgroundColor: AppColors.primary,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            );
+            Navigator.pop(context);
+          } else if (state.failure != null) {
+            state.failure!.map(
+              database: (f) => _showError(context, f.message),
+              network: (f) => _showError(context, f.message),
+              notFound: (f) => _showError(context, f.message),
+              unknown: (f) => _showError(context, f.message),
+            );
+          }
+        },
         builder: (context, state) {
           // Update controller settings when state changes
           _controller = SignatureController(
             penStrokeWidth: state.penStrokeWidth,
             penColor: state.penColor,
+            strokeCap: StrokeCap.round,
+            strokeJoin: StrokeJoin.round,
             points: _controller.points,
           );
 
@@ -74,7 +143,7 @@ class _CreateSignaturePageState extends State<CreateSignaturePage> {
                                   .changePenThickness(thickness),
                             ),
                             const SizedBox(height: 24),
-                            _buildActions(context),
+                            _buildActions(context, state),
                             const SizedBox(height: 24),
                           ],
                         ),
@@ -86,6 +155,15 @@ class _CreateSignaturePageState extends State<CreateSignaturePage> {
             ),
           );
         },
+      ),
+    );
+  }
+
+  void _showError(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Error: $message'),
+        backgroundColor: Colors.red,
       ),
     );
   }
@@ -128,14 +206,16 @@ class _CreateSignaturePageState extends State<CreateSignaturePage> {
     );
   }
 
-  Widget _buildActions(BuildContext context) {
+  Widget _buildActions(BuildContext context, SignatureState state) {
     final theme = Theme.of(context);
+    final isSaving = state.isSaving;
+
     return Row(
       children: [
         Expanded(
           flex: 4,
           child: OutlinedButton.icon(
-            onPressed: () => _controller.clear(),
+            onPressed: isSaving ? null : () => _controller.clear(),
             icon: const Icon(Icons.refresh, size: 20),
             label: const Text('Clear'),
             style: OutlinedButton.styleFrom(
@@ -155,24 +235,38 @@ class _CreateSignaturePageState extends State<CreateSignaturePage> {
           flex: 6,
           child: Container(
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [AppColors.primary, AppColors.secondary],
-              ),
+              gradient: isSaving
+                  ? null
+                  : const LinearGradient(
+                      colors: [AppColors.primary, AppColors.secondary],
+                    ),
+              color: isSaving
+                  ? theme.colorScheme.onSurface.withValues(alpha: 0.1)
+                  : null,
               borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.3),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+              boxShadow: isSaving
+                  ? null
+                  : [
+                      BoxShadow(
+                        color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
             ),
             child: ElevatedButton.icon(
-              onPressed: () {
-                // TODO(mfarhannabil): Implement save logic.
-              },
-              icon: const Icon(Icons.check, size: 20),
-              label: const Text('Save Signature'),
+              onPressed: isSaving ? null : () => _saveSignature(context),
+              icon: isSaving
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : const Icon(Icons.check, size: 20),
+              label: Text(isSaving ? 'Saving...' : 'Save Signature'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.transparent,
                 foregroundColor: theme.colorScheme.onPrimary,

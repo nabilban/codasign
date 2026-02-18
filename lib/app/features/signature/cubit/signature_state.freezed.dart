@@ -20,6 +20,9 @@ mixin _$SignatureState {
   Color get penColor => throw _privateConstructorUsedError;
   double get penStrokeWidth => throw _privateConstructorUsedError;
   bool get isDrawing => throw _privateConstructorUsedError;
+  bool get isSaving => throw _privateConstructorUsedError;
+  Failure? get failure => throw _privateConstructorUsedError;
+  bool get saveSuccess => throw _privateConstructorUsedError;
 
   /// Create a copy of SignatureState
   /// with the given fields replaced by the non-null parameter values.
@@ -35,7 +38,16 @@ abstract class $SignatureStateCopyWith<$Res> {
     $Res Function(SignatureState) then,
   ) = _$SignatureStateCopyWithImpl<$Res, SignatureState>;
   @useResult
-  $Res call({Color penColor, double penStrokeWidth, bool isDrawing});
+  $Res call({
+    Color penColor,
+    double penStrokeWidth,
+    bool isDrawing,
+    bool isSaving,
+    Failure? failure,
+    bool saveSuccess,
+  });
+
+  $FailureCopyWith<$Res>? get failure;
 }
 
 /// @nodoc
@@ -56,6 +68,9 @@ class _$SignatureStateCopyWithImpl<$Res, $Val extends SignatureState>
     Object? penColor = null,
     Object? penStrokeWidth = null,
     Object? isDrawing = null,
+    Object? isSaving = null,
+    Object? failure = freezed,
+    Object? saveSuccess = null,
   }) {
     return _then(
       _value.copyWith(
@@ -71,9 +86,35 @@ class _$SignatureStateCopyWithImpl<$Res, $Val extends SignatureState>
                 ? _value.isDrawing
                 : isDrawing // ignore: cast_nullable_to_non_nullable
                       as bool,
+            isSaving: null == isSaving
+                ? _value.isSaving
+                : isSaving // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            failure: freezed == failure
+                ? _value.failure
+                : failure // ignore: cast_nullable_to_non_nullable
+                      as Failure?,
+            saveSuccess: null == saveSuccess
+                ? _value.saveSuccess
+                : saveSuccess // ignore: cast_nullable_to_non_nullable
+                      as bool,
           )
           as $Val,
     );
+  }
+
+  /// Create a copy of SignatureState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $FailureCopyWith<$Res>? get failure {
+    if (_value.failure == null) {
+      return null;
+    }
+
+    return $FailureCopyWith<$Res>(_value.failure!, (value) {
+      return _then(_value.copyWith(failure: value) as $Val);
+    });
   }
 }
 
@@ -86,7 +127,17 @@ abstract class _$$SignatureStateImplCopyWith<$Res>
   ) = __$$SignatureStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Color penColor, double penStrokeWidth, bool isDrawing});
+  $Res call({
+    Color penColor,
+    double penStrokeWidth,
+    bool isDrawing,
+    bool isSaving,
+    Failure? failure,
+    bool saveSuccess,
+  });
+
+  @override
+  $FailureCopyWith<$Res>? get failure;
 }
 
 /// @nodoc
@@ -106,6 +157,9 @@ class __$$SignatureStateImplCopyWithImpl<$Res>
     Object? penColor = null,
     Object? penStrokeWidth = null,
     Object? isDrawing = null,
+    Object? isSaving = null,
+    Object? failure = freezed,
+    Object? saveSuccess = null,
   }) {
     return _then(
       _$SignatureStateImpl(
@@ -121,6 +175,18 @@ class __$$SignatureStateImplCopyWithImpl<$Res>
             ? _value.isDrawing
             : isDrawing // ignore: cast_nullable_to_non_nullable
                   as bool,
+        isSaving: null == isSaving
+            ? _value.isSaving
+            : isSaving // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        failure: freezed == failure
+            ? _value.failure
+            : failure // ignore: cast_nullable_to_non_nullable
+                  as Failure?,
+        saveSuccess: null == saveSuccess
+            ? _value.saveSuccess
+            : saveSuccess // ignore: cast_nullable_to_non_nullable
+                  as bool,
       ),
     );
   }
@@ -133,6 +199,9 @@ class _$SignatureStateImpl implements _SignatureState {
     this.penColor = Colors.black,
     this.penStrokeWidth = 3.0,
     this.isDrawing = false,
+    this.isSaving = false,
+    this.failure,
+    this.saveSuccess = false,
   });
 
   @override
@@ -144,10 +213,18 @@ class _$SignatureStateImpl implements _SignatureState {
   @override
   @JsonKey()
   final bool isDrawing;
+  @override
+  @JsonKey()
+  final bool isSaving;
+  @override
+  final Failure? failure;
+  @override
+  @JsonKey()
+  final bool saveSuccess;
 
   @override
   String toString() {
-    return 'SignatureState(penColor: $penColor, penStrokeWidth: $penStrokeWidth, isDrawing: $isDrawing)';
+    return 'SignatureState(penColor: $penColor, penStrokeWidth: $penStrokeWidth, isDrawing: $isDrawing, isSaving: $isSaving, failure: $failure, saveSuccess: $saveSuccess)';
   }
 
   @override
@@ -160,12 +237,24 @@ class _$SignatureStateImpl implements _SignatureState {
             (identical(other.penStrokeWidth, penStrokeWidth) ||
                 other.penStrokeWidth == penStrokeWidth) &&
             (identical(other.isDrawing, isDrawing) ||
-                other.isDrawing == isDrawing));
+                other.isDrawing == isDrawing) &&
+            (identical(other.isSaving, isSaving) ||
+                other.isSaving == isSaving) &&
+            (identical(other.failure, failure) || other.failure == failure) &&
+            (identical(other.saveSuccess, saveSuccess) ||
+                other.saveSuccess == saveSuccess));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, penColor, penStrokeWidth, isDrawing);
+  int get hashCode => Object.hash(
+    runtimeType,
+    penColor,
+    penStrokeWidth,
+    isDrawing,
+    isSaving,
+    failure,
+    saveSuccess,
+  );
 
   /// Create a copy of SignatureState
   /// with the given fields replaced by the non-null parameter values.
@@ -184,6 +273,9 @@ abstract class _SignatureState implements SignatureState {
     final Color penColor,
     final double penStrokeWidth,
     final bool isDrawing,
+    final bool isSaving,
+    final Failure? failure,
+    final bool saveSuccess,
   }) = _$SignatureStateImpl;
 
   @override
@@ -192,6 +284,12 @@ abstract class _SignatureState implements SignatureState {
   double get penStrokeWidth;
   @override
   bool get isDrawing;
+  @override
+  bool get isSaving;
+  @override
+  Failure? get failure;
+  @override
+  bool get saveSuccess;
 
   /// Create a copy of SignatureState
   /// with the given fields replaced by the non-null parameter values.
