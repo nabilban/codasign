@@ -1,5 +1,8 @@
+import 'package:codasign/app/features/document/cubit/document_selection_cubit.dart';
+import 'package:codasign/app/features/document/pages/sign_document_page.dart';
 import 'package:codasign/app/features/home/cubit/saved_signatures_cubit.dart';
 import 'package:codasign/app/features/signature/pages/create_signature_page.dart';
+import 'package:codasign/app/providers/providers.dart';
 import 'package:codasign/app/ui/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -151,9 +154,28 @@ class QuickActionsSection extends StatelessWidget {
           },
         ),
         const SizedBox(width: 16),
-        const QuickActionCard(
+        QuickActionCard(
           icon: Icons.description_outlined,
           title: 'Sign Document',
+          onTap: () {
+            final cubit = context.read<SavedSignaturesCubit>();
+            Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (context) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider(
+                      create: (context) => DocumentSelectionCubit(
+                        repository: getIt(),
+                      ),
+                    ),
+                    BlocProvider.value(value: cubit),
+                  ],
+                  child: const SignDocumentPage(),
+                ),
+              ),
+            );
+          },
         ),
       ],
     );

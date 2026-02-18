@@ -1,4 +1,5 @@
 import 'package:codasign/app/features/home/cubit/saved_signatures_cubit.dart';
+import 'package:codasign/app/features/home/cubit/signed_documents_cubit.dart';
 import 'package:codasign/app/features/home/widgets/home_bottom_widgets.dart';
 import 'package:codasign/app/features/home/widgets/home_top_widgets.dart';
 import 'package:codasign/app/providers/providers.dart';
@@ -11,10 +12,19 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => SavedSignaturesCubit(
-        repository: getIt(),
-      )..loadSignatures(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => SavedSignaturesCubit(
+            repository: getIt(),
+          )..loadSignatures(),
+        ),
+        BlocProvider(
+          create: (context) => SignedDocumentsCubit(
+            repository: getIt(),
+          )..loadDocuments(),
+        ),
+      ],
       child: Scaffold(
         body: Container(
           decoration: const BoxDecoration(
@@ -33,6 +43,7 @@ class HomePage extends StatelessWidget {
                 children: [
                   HeaderSection(),
                   QuickActionsSection(),
+                  StatsSection(),
                   SignaturesSection(),
                   DocumentsSection(),
                   SizedBox(height: 24),

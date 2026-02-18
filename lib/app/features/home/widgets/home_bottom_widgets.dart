@@ -1,68 +1,108 @@
 import 'dart:io';
-
 import 'package:codasign/app/features/home/cubit/saved_signatures_cubit.dart';
 import 'package:codasign/app/features/home/cubit/saved_signatures_state.dart';
+import 'package:codasign/app/features/home/cubit/signed_documents_cubit.dart';
+import 'package:codasign/app/features/home/cubit/signed_documents_state.dart';
 import 'package:codasign/app/features/signature/pages/signature_library_page.dart';
 import 'package:codasign/app/features/signature/widgets/signature_preview_dialog.dart';
 import 'package:codasign/app/ui/colors.dart';
+import 'package:codasign/core/domain/models/document_model.dart';
 import 'package:codasign/core/domain/models/saved_signature.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-class SectionHeader extends StatelessWidget {
-  const SectionHeader({
-    required this.title,
-    super.key,
-  });
-
-  final String title;
+class StatsSection extends StatelessWidget {
+  const StatsSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+    return BlocBuilder<SignedDocumentsCubit, SignedDocumentsState>(
+      builder: (context, state) {
+        final totalSigned = state.documents.length;
+        // Mock total pages for now, or sum up if we had that data
+        final totalPages =
+            state.documents.length * 2; // Example: 2 pages per doc
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 24),
+          child: Row(
+            children: [
+              _StatCard(
+                label: 'Total Signed',
+                value: totalSigned.toString(),
+                icon: Icons.assignment_turned_in_outlined,
+                color: AppColors.primary,
+              ),
+              const SizedBox(width: 16),
+              _StatCard(
+                label: 'Total Pages',
+                value: totalPages.toString(),
+                icon: Icons.auto_stories_outlined,
+                color: Colors.purpleAccent,
+              ),
+            ],
           ),
-          OutlinedButton(
-            onPressed: () {
-              final cubit = context.read<SavedSignaturesCubit>();
-              Navigator.push(
-                context,
-                MaterialPageRoute<void>(
-                  builder: (context) => BlocProvider.value(
-                    value: cubit,
-                    child: const SignatureLibraryPage(),
-                  ),
-                ),
-              );
-            },
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(
-                color: theme.colorScheme.primary.withValues(alpha: 0.5),
+        );
+      },
+    );
+  }
+}
+
+class _StatCard extends StatelessWidget {
+  const _StatCard({
+    required this.label,
+    required this.value,
+    required this.icon,
+    required this.color,
+  });
+
+  final String label;
+  final String value;
+  final IconData icon;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: color.withValues(alpha: 0.2),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
               ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Icon(icon, color: color, size: 20),
             ),
-            child: Text(
-              'View All',
-              style: theme.textTheme.labelLarge?.copyWith(
-                color: theme.colorScheme.primary,
+            const SizedBox(height: 16),
+            Text(
+              value,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-        ],
+            Text(
+              label,
+              style: TextStyle(
+                color: Colors.white.withValues(alpha: 0.5),
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -73,270 +113,160 @@ class SignaturesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SavedSignaturesCubit, SavedSignaturesState>(
-      builder: (context, state) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 32),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const SectionHeader(title: 'My Signatures'),
-            if (state.signatures.isEmpty)
-              _EmptySignaturesPlaceholder()
-            else
-              _SignaturesList(signatures: state.signatures),
+            Text(
+              'My Signatures',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
+            OutlinedButton(
+              onPressed: () {
+                final cubit = context.read<SavedSignaturesCubit>();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (context) => BlocProvider.value(
+                      value: cubit,
+                      child: const SignatureLibraryPage(),
+                    ),
+                  ),
+                );
+              },
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+              ),
+              child: Text(
+                'View All',
+                style: TextStyle(
+                  color: theme.colorScheme.primary,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12,
+                ),
+              ),
+            ),
           ],
-        );
-      },
+        ),
+        const SizedBox(height: 16),
+        BlocBuilder<SavedSignaturesCubit, SavedSignaturesState>(
+          builder: (context, state) {
+            if (state.isLoading) {
+              return const SizedBox(
+                height: 120,
+                child: Center(child: CircularProgressIndicator()),
+              );
+            }
+
+            if (state.signatures.isEmpty) {
+              return _buildEmptyState(context);
+            }
+
+            return SizedBox(
+              height: 120,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: state.signatures.length,
+                itemBuilder: (context, index) {
+                  return _HomeSignatureCard(signature: state.signatures[index]);
+                },
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
-}
 
-class _EmptySignaturesPlaceholder extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildEmptyState(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
       width: double.infinity,
-      height: 140,
+      height: 120,
       decoration: BoxDecoration(
-        color: AppColors.surfaceAlpha,
-        borderRadius: BorderRadius.circular(20),
+        color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
         ),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.edit_note_outlined,
-            size: 40,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
+      child: Center(
+        child: Text(
+          'No signatures yet',
+          style: TextStyle(
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+            fontSize: 14,
           ),
-          const SizedBox(height: 10),
-          Text(
-            'No signatures yet. Create one to get started!',
-            textAlign: TextAlign.center,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
 }
 
-class _SignaturesList extends StatelessWidget {
-  const _SignaturesList({required this.signatures});
-
-  final List<SavedSignature> signatures;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 140,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: signatures.length,
-        separatorBuilder: (_, _) => const SizedBox(width: 12),
-        itemBuilder: (context, index) =>
-            _SignatureCard(signature: signatures[index]),
-      ),
-    );
-  }
-}
-
-class _SignatureCard extends StatelessWidget {
-  const _SignatureCard({required this.signature});
+class _HomeSignatureCard extends StatelessWidget {
+  const _HomeSignatureCard({required this.signature});
 
   final SavedSignature signature;
 
-  void _confirmDelete(BuildContext context) {
-    showDialog<void>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        backgroundColor: const Color(0xFF1B263B),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(
-          'Delete Signature?',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        content: Text(
-          'This action cannot be undone.',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Colors.white54,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(color: Colors.white54),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              context.read<SavedSignaturesCubit>().deleteSignature(
-                signature.id,
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final dateStr = DateFormat('MMM d, yyyy').format(signature.createdAt);
-
     return GestureDetector(
       onTap: () => SignaturePreviewDialog.show(context, signature),
-      onLongPress: () => _confirmDelete(context),
       child: Container(
-        width: 130,
+        width: 140,
+        margin: const EdgeInsets.only(right: 16),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: AppColors.surfaceAlpha,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: theme.colorScheme.primary.withValues(alpha: 0.2),
+            color: Colors.white.withValues(alpha: 0.1),
           ),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Thumbnail area — checkerboard-style bg to show transparency
             Expanded(
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(15),
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                child: ColoredBox(
-                  color: Colors.white,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
                   child: Image.file(
                     File(signature.filePath),
                     fit: BoxFit.contain,
-                    errorBuilder: (_, _, _) => const Icon(
-                      Icons.broken_image_outlined,
-                      color: Colors.grey,
-                    ),
                   ),
                 ),
               ),
             ),
-            // Name + date
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    signature.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.onSurface,
-                    ),
-                  ),
-                  Text(
-                    dateStr,
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
-                      fontSize: 9,
-                    ),
-                  ),
-                ],
+            const SizedBox(height: 8),
+            Text(
+              signature.name,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class DocumentItem extends StatelessWidget {
-  const DocumentItem({
-    required this.title,
-    required this.subtitle,
-    super.key,
-  });
-
-  final String title;
-  final String subtitle;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceAlpha,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: theme.colorScheme.primary.withValues(alpha: 0.1),
-        ),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [AppColors.primary, AppColors.secondary],
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(
-              Icons.assignment_turned_in_outlined,
-              color: theme.colorScheme.onPrimary,
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Icon(
-            Icons.chevron_right,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
-          ),
-        ],
       ),
     );
   }
@@ -347,22 +277,169 @@ class DocumentsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    final theme = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionHeader(title: 'Signed PDFs'),
-        DocumentItem(
-          title: 'Contract Agreement.pdf',
-          subtitle: 'Feb 12, 2026 • 5 pages',
+        const SizedBox(height: 32),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Signed PDFs',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
+            TextButton(
+              onPressed: () {},
+              child: Text(
+                'View All',
+                style: TextStyle(
+                  color: theme.colorScheme.primary,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ],
         ),
-        DocumentItem(
-          title: 'NDA Document.pdf',
-          subtitle: 'Feb 11, 2026 • 3 pages',
-        ),
-        DocumentItem(
-          title: 'Service Agreement.pdf',
-          subtitle: 'Feb 9, 2026 • 8 pages',
+        const SizedBox(height: 16),
+        BlocBuilder<SignedDocumentsCubit, SignedDocumentsState>(
+          builder: (context, state) {
+            if (state.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (state.documents.isEmpty) {
+              return _buildDocEmptyState(context);
+            }
+
+            return ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: state.documents.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              itemBuilder: (context, index) {
+                return _SignedDocumentCard(document: state.documents[index]);
+              },
+            );
+          },
         ),
       ],
+    );
+  }
+
+  Widget _buildDocEmptyState(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 40),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+        ),
+      ),
+      child: Column(
+        children: [
+          Icon(
+            Icons.history_rounded,
+            size: 48,
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'No signed documents yet',
+            style: TextStyle(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+              fontSize: 14,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SignedDocumentCard extends StatelessWidget {
+  const _SignedDocumentCard({required this.document});
+
+  final DocumentModel document;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final dateStr = DateFormat('MMM dd, yyyy').format(document.createdAt);
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.1),
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(
+              Icons.description_rounded,
+              color: AppColors.primary,
+              size: 24,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  document.name,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Signed on $dateStr',
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.5),
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.green.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Text(
+              'Completed',
+              style: TextStyle(
+                color: Colors.greenAccent,
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
