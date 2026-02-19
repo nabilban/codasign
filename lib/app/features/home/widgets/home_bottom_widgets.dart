@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:codasign/app/features/document/pages/signed_document_preview_page.dart';
 import 'package:codasign/app/features/document/pages/signed_documents_library_page.dart';
 import 'package:codasign/app/features/home/cubit/saved_signatures_cubit.dart';
@@ -10,6 +11,7 @@ import 'package:codasign/app/features/signature/widgets/signature_preview_dialog
 import 'package:codasign/app/ui/colors.dart';
 import 'package:codasign/core/domain/models/document_model.dart';
 import 'package:codasign/core/domain/models/saved_signature.dart';
+import 'package:codasign/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -33,14 +35,14 @@ class StatsSection extends StatelessWidget {
           child: Row(
             children: [
               _StatCard(
-                label: 'Total Signed',
+                label: context.l10n.totalSigned,
                 value: totalSigned.toString(),
                 icon: Icons.assignment_turned_in_outlined,
                 color: AppColors.primary,
               ),
               const SizedBox(width: 16),
               _StatCard(
-                label: 'Total Pages',
+                label: context.l10n.totalPages,
                 value: totalPages.toString(),
                 icon: Icons.auto_stories_outlined,
                 color: Colors.purpleAccent,
@@ -127,7 +129,7 @@ class SignaturesSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'My Signatures',
+              context.l10n.mySignatures,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: theme.colorScheme.onSurface,
@@ -156,7 +158,7 @@ class SignaturesSection extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
               ),
               child: Text(
-                'View All',
+                context.l10n.viewAll,
                 style: TextStyle(
                   color: theme.colorScheme.primary,
                   fontWeight: FontWeight.w600,
@@ -210,7 +212,7 @@ class SignaturesSection extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          'No signatures yet',
+          context.l10n.noSignaturesYet,
           style: TextStyle(
             color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
             fontSize: 14,
@@ -293,7 +295,7 @@ class DocumentsSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Signed PDFs',
+              context.l10n.signedPdfs,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: theme.colorScheme.onSurface,
@@ -311,7 +313,7 @@ class DocumentsSection extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
               ),
               child: Text(
-                'View All',
+                context.l10n.viewAll,
                 style: TextStyle(
                   color: theme.colorScheme.primary,
                   fontWeight: FontWeight.w600,
@@ -381,7 +383,7 @@ class DocumentsSection extends StatelessWidget {
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            '$remainingCount more entries',
+                            context.l10n.moreEntries(remainingCount),
                             style: theme.textTheme.labelMedium?.copyWith(
                               color: theme.colorScheme.primary,
                               fontWeight: FontWeight.w600,
@@ -434,7 +436,7 @@ class DocumentsSection extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'No signed documents yet',
+            context.l10n.noSignedDocumentsYet,
             style: TextStyle(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
               fontSize: 14,
@@ -514,7 +516,7 @@ class _SignedDocumentCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Signed on $dateStr',
+                    context.l10n.signedOnDate(dateStr),
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
@@ -530,7 +532,7 @@ class _SignedDocumentCard extends StatelessWidget {
                     final file = XFile(document.path);
                     Share.shareXFiles(
                       [file],
-                      text: 'Signed Document: ${document.name}',
+                      text: context.l10n.shareSignedDocument(document.name),
                     );
                   },
                   icon: Icon(
@@ -538,7 +540,7 @@ class _SignedDocumentCard extends StatelessWidget {
                     color: theme.colorScheme.primary,
                     size: 20,
                   ),
-                  tooltip: 'Share',
+                  tooltip: context.l10n.shareTooltip,
                 ),
                 // Delete button removed for safety on Home page
               ],

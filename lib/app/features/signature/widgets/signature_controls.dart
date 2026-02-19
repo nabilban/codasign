@@ -1,4 +1,5 @@
 import 'package:codasign/app/ui/colors.dart';
+import 'package:codasign/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hsvcolor_picker/flutter_hsvcolor_picker.dart';
 
@@ -39,7 +40,7 @@ class SignatureControls extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
               title: Text(
-                'Custom Color',
+                context.l10n.customColor,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -60,7 +61,7 @@ class SignatureControls extends StatelessWidget {
                 TextButton(
                   onPressed: () => Navigator.pop(dialogContext),
                   child: Text(
-                    'Cancel',
+                    context.l10n.cancel,
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       color: Colors.white54,
                     ),
@@ -78,7 +79,7 @@ class SignatureControls extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  child: const Text('Apply'),
+                  child: Text(context.l10n.apply),
                 ),
               ],
             );
@@ -104,7 +105,7 @@ class SignatureControls extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Pen Color',
+            context.l10n.penColor,
             style: theme.textTheme.labelSmall?.copyWith(
               fontWeight: FontWeight.w600,
               color: theme.colorScheme.onSurfaceVariant,
@@ -115,21 +116,21 @@ class SignatureControls extends StatelessWidget {
             children: [
               _ColorOption(
                 color: Colors.black,
-                label: 'Black',
+                label: context.l10n.colorBlack,
                 isSelected: selectedColor == Colors.black,
                 onTap: () => onColorChanged(Colors.black),
               ),
               const SizedBox(width: 8),
               _ColorOption(
                 color: Colors.blue,
-                label: 'Blue',
+                label: context.l10n.colorBlue,
                 isSelected: selectedColor == Colors.blue,
                 onTap: () => onColorChanged(Colors.blue),
               ),
               const SizedBox(width: 8),
               _ColorOption(
                 color: AppColors.primary,
-                label: 'Cyan',
+                label: context.l10n.colorCyan,
                 isSelected: selectedColor == AppColors.primary,
                 onTap: () => onColorChanged(AppColors.primary),
               ),
@@ -189,7 +190,7 @@ class SignatureControls extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Custom',
+                          context.l10n.colorCustom,
                           style: theme.textTheme.labelSmall?.copyWith(
                             fontWeight: FontWeight.w500,
                           ),
@@ -203,7 +204,7 @@ class SignatureControls extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           Text(
-            'Pen Thickness',
+            context.l10n.penThickness,
             style: theme.textTheme.labelSmall?.copyWith(
               fontWeight: FontWeight.w600,
               color: theme.colorScheme.onSurfaceVariant,
@@ -214,21 +215,21 @@ class SignatureControls extends StatelessWidget {
             children: [
               _ThicknessOption(
                 thickness: 1,
-                label: 'Thin',
+                label: context.l10n.thicknessThin,
                 isSelected: selectedThickness == 1,
                 onTap: () => onThicknessChanged(1),
               ),
               const SizedBox(width: 12),
               _ThicknessOption(
                 thickness: 3,
-                label: 'Medium',
+                label: context.l10n.thicknessMedium,
                 isSelected: selectedThickness == 3,
                 onTap: () => onThicknessChanged(3),
               ),
               const SizedBox(width: 12),
               _ThicknessOption(
                 thickness: 6,
-                label: 'Thick',
+                label: context.l10n.thicknessThick,
                 isSelected: selectedThickness == 6,
                 onTap: () => onThicknessChanged(6),
               ),

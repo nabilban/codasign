@@ -7,6 +7,7 @@ import 'package:codasign/app/features/signature/widgets/signature_canvas.dart';
 import 'package:codasign/app/features/signature/widgets/signature_controls.dart';
 import 'package:codasign/app/providers/providers.dart';
 import 'package:codasign/app/ui/colors.dart';
+import 'package:codasign/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:signature/signature.dart' hide SignatureState;
@@ -39,7 +40,7 @@ class _CreateSignaturePageState extends State<CreateSignaturePage> {
   Future<void> _saveSignature(BuildContext context) async {
     if (_controller.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please draw a signature first.')),
+        SnackBar(content: Text(context.l10n.pleaseDrawSignature)),
       );
       return;
     }
@@ -51,7 +52,7 @@ class _CreateSignaturePageState extends State<CreateSignaturePage> {
     if (pngBytes == null) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to export signature.')),
+          SnackBar(content: Text(context.l10n.failedToExportSignature)),
         );
       }
       return;
@@ -83,7 +84,7 @@ class _CreateSignaturePageState extends State<CreateSignaturePage> {
 
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: const Text('Signature saved!'),
+                content: Text(context.l10n.signatureSaved),
                 backgroundColor: AppColors.primary,
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(
@@ -162,7 +163,7 @@ class _CreateSignaturePageState extends State<CreateSignaturePage> {
   void _showError(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Error: $message'),
+        content: Text(context.l10n.errorPrefix(message)),
         backgroundColor: Colors.red,
       ),
     );
@@ -194,7 +195,7 @@ class _CreateSignaturePageState extends State<CreateSignaturePage> {
             ),
           ),
           Text(
-            'Create Signature',
+            context.l10n.createSignatureHeader,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.onSurface,
@@ -217,7 +218,7 @@ class _CreateSignaturePageState extends State<CreateSignaturePage> {
           child: OutlinedButton.icon(
             onPressed: isSaving ? null : () => _controller.clear(),
             icon: const Icon(Icons.refresh, size: 20),
-            label: const Text('Clear'),
+            label: Text(context.l10n.clear),
             style: OutlinedButton.styleFrom(
               foregroundColor: theme.colorScheme.onSurface,
               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -266,7 +267,9 @@ class _CreateSignaturePageState extends State<CreateSignaturePage> {
                       ),
                     )
                   : const Icon(Icons.check, size: 20),
-              label: Text(isSaving ? 'Saving...' : 'Save Signature'),
+              label: Text(
+                isSaving ? context.l10n.saving : context.l10n.saveSignature,
+              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.transparent,
                 foregroundColor: theme.colorScheme.onPrimary,

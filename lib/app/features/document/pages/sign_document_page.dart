@@ -8,6 +8,7 @@ import 'package:codasign/app/features/home/cubit/saved_signatures_cubit.dart';
 import 'package:codasign/app/providers/providers.dart';
 import 'package:codasign/app/ui/colors.dart';
 import 'package:codasign/core/domain/models/document_model.dart';
+import 'package:codasign/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -85,7 +86,7 @@ class SignDocumentPage extends StatelessWidget {
             ),
           ),
           Text(
-            'Sign Document',
+            context.l10n.signDocumentHeader,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.onSurface,
@@ -117,7 +118,7 @@ class SignDocumentPage extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            'Import PDF to Sign',
+            context.l10n.importPdfToSign,
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.onSurface,
@@ -125,7 +126,7 @@ class SignDocumentPage extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Search locally or via Drive',
+            context.l10n.searchLocallyOrDrive,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
             ),
@@ -135,7 +136,7 @@ class SignDocumentPage extends StatelessWidget {
             onPressed: () =>
                 context.read<DocumentSelectionCubit>().pickDocument(),
             icon: const Icon(Icons.add_rounded),
-            label: const Text('Select Document'),
+            label: Text(context.l10n.selectDocument),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               shape: RoundedRectangleBorder(
@@ -195,9 +196,9 @@ class SignDocumentPage extends StatelessWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const _MetaDataTag(
+                        _MetaDataTag(
                           icon: Icons.description_outlined,
-                          label: 'PDF',
+                          label: context.l10n.pdfLabel,
                         ),
                         const SizedBox(width: 8),
                         _MetaDataTag(
@@ -263,9 +264,9 @@ class SignDocumentPage extends StatelessWidget {
                 elevation: 8,
                 shadowColor: AppColors.primary.withValues(alpha: 0.5),
               ),
-              child: const Text(
-                'Prepare for Signing',
-                style: TextStyle(
+              child: Text(
+                context.l10n.prepareForSigning,
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),

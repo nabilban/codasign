@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:codasign/core/domain/models/document_model.dart';
+import 'package:codasign/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -35,7 +36,7 @@ class SignedDocumentPreviewPage extends StatelessWidget {
               final file = XFile(document.path);
               Share.shareXFiles([
                 file,
-              ], text: 'Signed Document: ${document.name}');
+              ], text: context.l10n.shareSignedDocument(document.name));
             },
           ),
         ],

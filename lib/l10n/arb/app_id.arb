@@ -1,0 +1,110 @@
+{
+    "@@locale": "id",
+
+    "homeSubtitle": "Kelola tanda tangan & dokumen Anda",
+
+    "createSignature": "Buat Tanda Tangan",
+    "signDocument": "Tanda Tangani Dokumen",
+
+    "totalSigned": "Total Ditandatangani",
+    "totalPages": "Total Halaman",
+
+    "mySignatures": "Tanda Tangan Saya",
+    "signedPdfs": "PDF Ditandatangani",
+    "viewAll": "Lihat Semua",
+
+    "noSignaturesYet": "Belum ada tanda tangan",
+    "noSignedDocumentsYet": "Belum ada dokumen ditandatangani",
+    "moreEntries": "{count} entri lainnya",
+
+    "signedOnDate": "Ditandatangani pada {date}",
+
+    "shareSignedDocument": "Dokumen Ditandatangani: {name}",
+
+    "shareTooltip": "Bagikan",
+
+    "settings": "Pengaturan",
+    "settingsSubtitle": "Konfigurasi aplikasi & data",
+
+    "sectionDataManagement": "Manajemen Data",
+    "sectionGeneral": "Umum",
+    "sectionDeveloperTools": "Alat Pengembang",
+
+    "clearAllData": "Hapus Semua Data",
+    "clearAllDataSubtitle": "Hapus semua tanda tangan dan dokumen yang ditandatangani",
+    "language": "Bahasa",
+    "english": "Inggris",
+    "indonesian": "Indonesia",
+    "comingSoon": "Segera hadir",
+    "aboutCodaSign": "Tentang CodaSign",
+    "versionInfo": "Versi 1.0.0",
+    "printAllFiles": "Cetak Semua File",
+    "printAllFilesSubtitle": "Tampilkan semua item di direktori Dokumen dan Tanda Tangan",
+
+    "clearAllDataDialogTitle": "Hapus Semua Data?",
+    "clearAllDataDialogContent": "Ini akan menghapus semua tanda tangan dan dokumen yang ditandatangani secara permanen. Tindakan ini tidak dapat dibatalkan.",
+    "cancel": "Batal",
+    "clearEverything": "Hapus Semuanya",
+    "allDataCleared": "Semua data berhasil dihapus",
+
+    "foundItems": "Ditemukan {count} item. Periksa konsol debug.",
+
+    "errorListingFiles": "Kesalahan saat menampilkan file: {error}",
+
+    "signDocumentHeader": "Tanda Tangani Dokumen",
+    "importPdfToSign": "Impor PDF untuk Ditandatangani",
+    "searchLocallyOrDrive": "Cari secara lokal atau via Drive",
+    "selectDocument": "Pilih Dokumen",
+    "prepareForSigning": "Siapkan untuk Penandatanganan",
+    "pdfLabel": "PDF",
+
+    "pageNumber": "Halaman {page}",
+
+    "finalize": "Selesaikan",
+    "addSignature": "Tambah Tanda Tangan",
+    "documentSignedSuccess": "Dokumen ditandatangani dan disimpan ke riwayat!",
+    "errorPrefix": "Kesalahan: {message}",
+
+    "signedDocuments": "Dokumen Ditandatangani",
+    "noDocumentsFound": "Tidak ada dokumen ditemukan",
+
+    "deleteDocumentTitle": "Hapus Dokumen?",
+    "deleteDocumentContent": "Tindakan ini akan menghapus dokumen yang ditandatangani ini secara permanen dari riwayat Anda.",
+    "delete": "Hapus",
+
+    "myLibrary": "Perpustakaan Saya",
+    "selectSignatureToPlace": "Pilih tanda tangan untuk ditempatkan",
+    "noSignaturesFound": "Tidak ada tanda tangan ditemukan",
+    "createNew": "Buat Baru",
+
+    "createSignatureHeader": "Buat Tanda Tangan",
+    "clear": "Bersihkan",
+    "saveSignature": "Simpan Tanda Tangan",
+    "saving": "Menyimpan...",
+    "pleaseDrawSignature": "Silakan gambar tanda tangan terlebih dahulu.",
+    "failedToExportSignature": "Gagal mengekspor tanda tangan.",
+    "signatureSaved": "Tanda tangan disimpan!",
+
+    "libraryIsEmpty": "Perpustakaan Kosong",
+    "createFirstSignature": "Buat tanda tangan pertama Anda sekarang!",
+    "createdDate": "Dibuat {date}",
+
+    "deleteSignatureTitle": "Hapus Tanda Tangan?",
+    "deleteSignatureContent": "Tindakan ini akan menghapus tanda tangan ini secara permanen dari perpustakaan Anda.",
+
+    "penColor": "Warna Pena",
+    "penThickness": "Ketebalan Pena",
+    "customColor": "Warna Kustom",
+    "colorBlack": "Hitam",
+    "colorBlue": "Biru",
+    "colorCyan": "Sian",
+    "colorCustom": "Kustom",
+    "thicknessThin": "Tipis",
+    "thicknessMedium": "Sedang",
+    "thicknessThick": "Tebal",
+    "apply": "Terapkan",
+
+    "fullPreview": "Pratinjau Penuh",
+    "pinchToZoom": "Cubit untuk memperbesar",
+    "shareSignature": "Tanda Tangan: {name}"
+}

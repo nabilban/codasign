@@ -4,6 +4,7 @@ import 'package:codasign/app/features/home/cubit/signed_documents_state.dart';
 import 'package:codasign/app/features/home/widgets/home_bottom_widgets.dart';
 import 'package:codasign/app/ui/colors.dart';
 import 'package:codasign/core/domain/models/document_model.dart';
+import 'package:codasign/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -43,10 +44,10 @@ class SignedDocumentsLibraryPage extends StatelessWidget {
                     }
 
                     if (state.documents.isEmpty) {
-                      return const Center(
+                      return Center(
                         child: Text(
-                          'No documents found',
-                          style: TextStyle(color: Colors.white70),
+                          context.l10n.noDocumentsFound,
+                          style: const TextStyle(color: Colors.white70),
                         ),
                       );
                     }
@@ -104,7 +105,7 @@ class _LibraryHeader extends StatelessWidget {
           ),
           const SizedBox(width: 16),
           Text(
-            'Signed Documents',
+            context.l10n.signedDocuments,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.onSurface,
@@ -183,7 +184,7 @@ class _LibraryDocumentCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Signed on $dateStr',
+                    context.l10n.signedOnDate(dateStr),
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.4),
                       fontSize: 12,
@@ -199,7 +200,7 @@ class _LibraryDocumentCard extends StatelessWidget {
                     final file = XFile(document.path);
                     Share.shareXFiles([
                       file,
-                    ], text: 'Signed Document: ${document.name}');
+                    ], text: context.l10n.shareSignedDocument(document.name));
                   },
                   icon: Icon(
                     Icons.share_outlined,
@@ -229,21 +230,23 @@ class _LibraryDocumentCard extends StatelessWidget {
       builder: (dialogContext) => AlertDialog(
         backgroundColor: const Color(0xFF1B263B),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text(
-          'Delete Document?',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          context.l10n.deleteDocumentTitle,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        content: const Text(
-          'This action will permanently remove this signed document from '
-          'your history.',
-          style: TextStyle(color: Colors.white70),
+        content: Text(
+          context.l10n.deleteDocumentContent,
+          style: const TextStyle(color: Colors.white70),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(color: Colors.white54),
+            child: Text(
+              context.l10n.cancel,
+              style: const TextStyle(color: Colors.white54),
             ),
           ),
           ElevatedButton(
@@ -258,7 +261,7 @@ class _LibraryDocumentCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child: const Text('Delete'),
+            child: Text(context.l10n.delete),
           ),
         ],
       ),

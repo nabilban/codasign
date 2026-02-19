@@ -1,9 +1,11 @@
 import 'dart:io';
+
 import 'package:codasign/app/features/home/cubit/saved_signatures_cubit.dart';
 import 'package:codasign/app/features/home/cubit/saved_signatures_state.dart';
 import 'package:codasign/app/features/signature/pages/create_signature_page.dart';
 import 'package:codasign/app/ui/colors.dart';
 import 'package:codasign/core/domain/models/saved_signature.dart';
+import 'package:codasign/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -96,7 +98,7 @@ class SignaturePickerSheet extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'My Library',
+                context.l10n.myLibrary,
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -104,7 +106,7 @@ class SignaturePickerSheet extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                'Select a signature to place',
+                context.l10n.selectSignatureToPlace,
                 style: TextStyle(
                   color: Colors.white.withValues(alpha: 0.5),
                   fontSize: 14,
@@ -154,9 +156,9 @@ class SignaturePickerSheet extends StatelessWidget {
             color: Colors.white.withValues(alpha: 0.2),
           ),
           const SizedBox(height: 16),
-          const Text(
-            'No signatures found',
-            style: TextStyle(color: Colors.white70, fontSize: 16),
+          Text(
+            context.l10n.noSignaturesFound,
+            style: const TextStyle(color: Colors.white70, fontSize: 16),
           ),
           const SizedBox(height: 24),
           ElevatedButton(
@@ -172,7 +174,7 @@ class SignaturePickerSheet extends StatelessWidget {
                 ),
               );
             },
-            child: const Text('Create New'),
+            child: Text(context.l10n.createNew),
           ),
         ],
       ),

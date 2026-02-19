@@ -6,6 +6,7 @@ import 'package:codasign/app/features/settings/pages/settings_page.dart';
 import 'package:codasign/app/features/signature/pages/create_signature_page.dart';
 import 'package:codasign/app/providers/providers.dart';
 import 'package:codasign/app/ui/colors.dart';
+import 'package:codasign/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -44,7 +45,7 @@ class HeaderSection extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                'Manage your signatures & documents',
+                context.l10n.homeSubtitle,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -168,7 +169,7 @@ class QuickActionsSection extends StatelessWidget {
       children: [
         QuickActionCard(
           icon: Icons.edit_outlined,
-          title: 'Create Signature',
+          title: context.l10n.createSignature,
           onTap: () {
             final cubit = context.read<SavedSignaturesCubit>();
             Navigator.push(
@@ -185,7 +186,7 @@ class QuickActionsSection extends StatelessWidget {
         const SizedBox(width: 8),
         QuickActionCard(
           icon: Icons.description_outlined,
-          title: 'Sign Document',
+          title: context.l10n.signDocument,
           onTap: () {
             final cubit = context.read<SavedSignaturesCubit>();
             Navigator.push(

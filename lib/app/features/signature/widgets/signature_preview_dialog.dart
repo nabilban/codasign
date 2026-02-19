@@ -1,6 +1,8 @@
 import 'dart:io';
+
 import 'package:codasign/app/ui/colors.dart';
 import 'package:codasign/core/domain/models/saved_signature.dart';
+import 'package:codasign/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -57,7 +59,7 @@ class SignaturePreviewDialog extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                'Full Preview',
+                context.l10n.fullPreview,
                 style: TextStyle(
                   color: Colors.white.withValues(alpha: 0.5),
                   fontSize: 14,
@@ -74,7 +76,7 @@ class SignaturePreviewDialog extends StatelessWidget {
                 final file = XFile(signature.filePath);
                 Share.shareXFiles(
                   [file],
-                  text: 'Signature: ${signature.name}',
+                  text: context.l10n.shareSignature(signature.name),
                 );
               },
               icon: Container(
@@ -170,7 +172,7 @@ class SignaturePreviewDialog extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           Text(
-            'Pinch to zoom',
+            context.l10n.pinchToZoom,
             style: TextStyle(
               color: theme.colorScheme.primary.withValues(alpha: 0.7),
               fontSize: 12,

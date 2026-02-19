@@ -1,8 +1,10 @@
 import 'dart:io';
+
 import 'package:codasign/app/features/document/cubit/pdf_signing_cubit.dart';
 import 'package:codasign/app/features/document/cubit/pdf_signing_state.dart';
 import 'package:codasign/app/features/document/widgets/signature_picker_sheet.dart';
 import 'package:codasign/app/ui/colors.dart';
+import 'package:codasign/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart' as sfpdf;
@@ -42,8 +44,8 @@ class _PDFSigningPageState extends State<PDFSigningPage> {
         listener: (context, state) {
           if (state.saveSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Document signed and saved to history!'),
+              SnackBar(
+                content: Text(context.l10n.documentSignedSuccess),
                 backgroundColor: Colors.green,
               ),
             );
@@ -53,7 +55,7 @@ class _PDFSigningPageState extends State<PDFSigningPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                  'Error: ${state.failure!.message}',
+                  context.l10n.errorPrefix(state.failure!.message),
                 ),
                 backgroundColor: Colors.red,
               ),
@@ -140,7 +142,7 @@ class _PDFSigningPageState extends State<PDFSigningPage> {
                     (sig) =>
                         context.read<PDFSigningCubit>().selectSignature(sig),
                   ),
-                  label: const Text('Add Signature'),
+                  label: Text(context.l10n.addSignature),
                   icon: const Icon(Icons.add),
                   backgroundColor: AppColors.primary,
                 )
@@ -161,7 +163,7 @@ class _PDFSigningPageState extends State<PDFSigningPage> {
             icon: const Icon(Icons.close, color: Colors.white),
           ),
           Text(
-            'Page ${state.currentPage}',
+            context.l10n.pageNumber(state.currentPage),
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
@@ -189,9 +191,9 @@ class _PDFSigningPageState extends State<PDFSigningPage> {
                       width: 20,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Text(
-                      'Finalize',
-                      style: TextStyle(
+                  : Text(
+                      context.l10n.finalize,
+                      style: const TextStyle(
                         color: AppColors.primary,
                         fontWeight: FontWeight.bold,
                       ),

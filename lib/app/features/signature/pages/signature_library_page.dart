@@ -1,10 +1,12 @@
 import 'dart:io';
+
 import 'package:codasign/app/features/home/cubit/saved_signatures_cubit.dart';
 import 'package:codasign/app/features/home/cubit/saved_signatures_state.dart';
 import 'package:codasign/app/features/signature/pages/create_signature_page.dart';
 import 'package:codasign/app/features/signature/widgets/signature_preview_dialog.dart';
 import 'package:codasign/app/ui/colors.dart';
 import 'package:codasign/core/domain/models/saved_signature.dart';
+import 'package:codasign/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -93,7 +95,7 @@ class _LibraryHeader extends StatelessWidget {
             ),
           ),
           Text(
-            'My Signatures',
+            context.l10n.mySignatures,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.onSurface,
@@ -173,7 +175,7 @@ class _LibrarySignatureCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Created $dateStr',
+                      context.l10n.createdDate(dateStr),
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: theme.colorScheme.onSurface.withValues(
                           alpha: 0.4,
@@ -233,21 +235,23 @@ class _LibrarySignatureCard extends StatelessWidget {
       builder: (dialogContext) => AlertDialog(
         backgroundColor: const Color(0xFF1B263B),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text(
-          'Delete Signature?',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        title: Text(
+          context.l10n.deleteSignatureTitle,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        content: const Text(
-          'This action will permanently remove this signature '
-          'from your library.',
-          style: TextStyle(color: Colors.white70),
+        content: Text(
+          context.l10n.deleteSignatureContent,
+          style: const TextStyle(color: Colors.white70),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(color: Colors.white54),
+            child: Text(
+              context.l10n.cancel,
+              style: const TextStyle(color: Colors.white54),
             ),
           ),
           ElevatedButton(
@@ -264,7 +268,7 @@ class _LibrarySignatureCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child: const Text('Delete'),
+            child: Text(context.l10n.delete),
           ),
         ],
       ),
@@ -294,7 +298,7 @@ class _EmptyLibraryPlaceholder extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            'Library is Empty',
+            context.l10n.libraryIsEmpty,
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.onSurface,
@@ -302,7 +306,7 @@ class _EmptyLibraryPlaceholder extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Create your first signature now!',
+            context.l10n.createFirstSignature,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
             ),
@@ -322,7 +326,7 @@ class _EmptyLibraryPlaceholder extends StatelessWidget {
               );
             },
             icon: const Icon(Icons.add),
-            label: const Text('Create New'),
+            label: Text(context.l10n.createNew),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               shape: RoundedRectangleBorder(

@@ -2,7 +2,10 @@ import 'dart:io';
 
 import 'package:codasign/app/features/home/cubit/saved_signatures_cubit.dart';
 import 'package:codasign/app/features/home/cubit/signed_documents_cubit.dart';
+import 'package:codasign/app/features/settings/cubit/locale_cubit.dart';
+import 'package:codasign/app/features/settings/cubit/locale_state.dart';
 import 'package:codasign/app/ui/colors.dart';
+import 'package:codasign/l10n/l10n.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,46 +40,56 @@ class SettingsPage extends StatelessWidget {
                     vertical: 8,
                   ),
                   children: [
-                    _buildSectionHeader(context, 'Data Management'),
+                    _buildSectionHeader(
+                      context,
+                      context.l10n.sectionDataManagement,
+                    ),
                     const SizedBox(height: 16),
                     _buildSettingsTile(
                       context,
                       icon: Icons.delete_sweep_outlined,
-                      title: 'Clear All Data',
-                      subtitle: 'Remove all signatures and signed documents',
+                      title: context.l10n.clearAllData,
+                      subtitle: context.l10n.clearAllDataSubtitle,
                       onTap: () => _confirmClearAll(context),
                       isDestructive: true,
                     ),
                     const SizedBox(height: 32),
-                    _buildSectionHeader(context, 'General'),
+                    _buildSectionHeader(context, context.l10n.sectionGeneral),
                     const SizedBox(height: 16),
-                    _buildSettingsTile(
-                      context,
-                      icon: Icons.language_outlined,
-                      title: 'Language',
-                      subtitle: 'Coming soon',
-                      enabled: false,
-                      onTap: () {},
+                    BlocBuilder<LocaleCubit, LocaleState>(
+                      builder: (context, state) {
+                        final languageName = state.locale.languageCode == 'en'
+                            ? context.l10n.english
+                            : context.l10n.indonesian;
+                        return _buildSettingsTile(
+                          context,
+                          icon: Icons.language_outlined,
+                          title: context.l10n.language,
+                          subtitle: languageName,
+                          onTap: () => _showLanguageSelector(context),
+                        );
+                      },
                     ),
                     const SizedBox(height: 16),
                     _buildSettingsTile(
                       context,
                       icon: Icons.info_outline,
-                      title: 'About CodaSign',
-                      subtitle: 'Version 1.0.0',
+                      title: context.l10n.aboutCodaSign,
+                      subtitle: context.l10n.versionInfo,
                       onTap: () {},
                     ),
                     if (kDebugMode) ...[
                       const SizedBox(height: 32),
-                      _buildSectionHeader(context, 'Developer Tools'),
+                      _buildSectionHeader(
+                        context,
+                        context.l10n.sectionDeveloperTools,
+                      ),
                       const SizedBox(height: 16),
                       _buildSettingsTile(
                         context,
                         icon: Icons.bug_report_outlined,
-                        title: 'Print All Files',
-                        subtitle:
-                            'List all items in Documents and '
-                            'Signatures directory',
+                        title: context.l10n.printAllFiles,
+                        subtitle: context.l10n.printAllFilesSubtitle,
                         onTap: () => _printAllFiles(context),
                       ),
                       // const SizedBox(height: 16),
@@ -131,7 +144,7 @@ class SettingsPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Settings',
+                context.l10n.settings,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -139,7 +152,7 @@ class SettingsPage extends StatelessWidget {
                 ),
               ),
               Text(
-                'App configuration & data',
+                context.l10n.settingsSubtitle,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurface,
                 ),
@@ -246,16 +259,15 @@ class SettingsPage extends StatelessWidget {
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF1B263B),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Clear All Data?'),
-        content: const Text(
-          'This will permanently delete all your saved signatures and '
-          'signed documents. This action cannot be undone.',
+        title: Text(context.l10n.clearAllDataDialogTitle),
+        content: Text(
+          context.l10n.clearAllDataDialogContent,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
             child: Text(
-              'Cancel',
+              context.l10n.cancel,
               style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
             ),
           ),
@@ -268,7 +280,7 @@ class SettingsPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            child: const Text('Clear Everything'),
+            child: Text(context.l10n.clearEverything),
           ),
         ],
       ),
@@ -282,8 +294,8 @@ class SettingsPage extends StatelessWidget {
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('All data cleared successfully'),
+          SnackBar(
+            content: Text(context.l10n.allDataCleared),
             backgroundColor: AppColors.primary,
           ),
         );
@@ -323,7 +335,7 @@ class SettingsPage extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Found ${entities.length} items. Check debug console.',
+              context.l10n.foundItems(entities.length),
             ),
             backgroundColor: AppColors.primary,
           ),
@@ -333,11 +345,72 @@ class SettingsPage extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error listing files: $e'),
+            content: Text(context.l10n.errorListingFiles(e.toString())),
             backgroundColor: Colors.redAccent,
           ),
         );
       }
     }
+  }
+
+  void _showLanguageSelector(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: const Color(0xFF1B263B),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(context.l10n.language),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildLanguageOption(
+              context,
+              dialogContext,
+              label: context.l10n.english,
+              locale: const Locale('en'),
+            ),
+            const SizedBox(height: 8),
+            _buildLanguageOption(
+              context,
+              dialogContext,
+              label: context.l10n.indonesian,
+              locale: const Locale('id'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLanguageOption(
+    BuildContext context,
+    BuildContext dialogContext, {
+    required String label,
+    required Locale locale,
+  }) {
+    final currentLocale = context.read<LocaleCubit>().state.locale;
+    final isSelected = currentLocale.languageCode == locale.languageCode;
+    final theme = Theme.of(context);
+
+    return ListTile(
+      onTap: () {
+        context.read<LocaleCubit>().setLocale(locale);
+        Navigator.pop(dialogContext);
+      },
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      tileColor: isSelected
+          ? theme.colorScheme.primary.withValues(alpha: 0.1)
+          : Colors.transparent,
+      title: Text(
+        label,
+        style: theme.textTheme.bodyLarge?.copyWith(
+          color: isSelected ? theme.colorScheme.primary : Colors.white,
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      trailing: isSelected
+          ? Icon(Icons.check_circle, color: theme.colorScheme.primary)
+          : null,
+    );
   }
 }

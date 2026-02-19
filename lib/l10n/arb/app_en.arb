@@ -1,7 +1,176 @@
 {
     "@@locale": "en",
-    "counterAppBarTitle": "Counter",
-    "@counterAppBarTitle": {
-        "description": "Text shown in the AppBar of the Counter Page"
+
+    "homeSubtitle": "Manage your signatures & documents",
+    "@homeSubtitle": {
+        "description": "Subtitle shown below the logo on the home page"
+    },
+
+    "createSignature": "Create Signature",
+    "signDocument": "Sign Document",
+
+    "totalSigned": "Total Signed",
+    "totalPages": "Total Pages",
+
+    "mySignatures": "My Signatures",
+    "signedPdfs": "Signed PDFs",
+    "viewAll": "View All",
+
+    "noSignaturesYet": "No signatures yet",
+    "noSignedDocumentsYet": "No signed documents yet",
+    "moreEntries": "{count} more entries",
+    "@moreEntries": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+
+    "signedOnDate": "Signed on {date}",
+    "@signedOnDate": {
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    },
+
+    "shareSignedDocument": "Signed Document: {name}",
+    "@shareSignedDocument": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+
+    "shareTooltip": "Share",
+
+    "settings": "Settings",
+    "settingsSubtitle": "App configuration & data",
+
+    "sectionDataManagement": "Data Management",
+    "sectionGeneral": "General",
+    "sectionDeveloperTools": "Developer Tools",
+
+    "clearAllData": "Clear All Data",
+    "clearAllDataSubtitle": "Remove all signatures and signed documents",
+    "language": "Language",
+    "english": "English",
+    "indonesian": "Indonesian",
+    "comingSoon": "Coming soon",
+    "aboutCodaSign": "About CodaSign",
+    "versionInfo": "Version 1.0.0",
+    "printAllFiles": "Print All Files",
+    "printAllFilesSubtitle": "List all items in Documents and Signatures directory",
+
+    "clearAllDataDialogTitle": "Clear All Data?",
+    "clearAllDataDialogContent": "This will permanently delete all your saved signatures and signed documents. This action cannot be undone.",
+    "cancel": "Cancel",
+    "clearEverything": "Clear Everything",
+    "allDataCleared": "All data cleared successfully",
+
+    "foundItems": "Found {count} items. Check debug console.",
+    "@foundItems": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+
+    "errorListingFiles": "Error listing files: {error}",
+    "@errorListingFiles": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+
+    "signDocumentHeader": "Sign Document",
+    "importPdfToSign": "Import PDF to Sign",
+    "searchLocallyOrDrive": "Search locally or via Drive",
+    "selectDocument": "Select Document",
+    "prepareForSigning": "Prepare for Signing",
+    "pdfLabel": "PDF",
+
+    "pageNumber": "Page {page}",
+    "@pageNumber": {
+        "placeholders": {
+            "page": {
+                "type": "int"
+            }
+        }
+    },
+
+    "finalize": "Finalize",
+    "addSignature": "Add Signature",
+    "documentSignedSuccess": "Document signed and saved to history!",
+    "errorPrefix": "Error: {message}",
+    "@errorPrefix": {
+        "placeholders": {
+            "message": {
+                "type": "String"
+            }
+        }
+    },
+
+    "signedDocuments": "Signed Documents",
+    "noDocumentsFound": "No documents found",
+
+    "deleteDocumentTitle": "Delete Document?",
+    "deleteDocumentContent": "This action will permanently remove this signed document from your history.",
+    "delete": "Delete",
+
+    "myLibrary": "My Library",
+    "selectSignatureToPlace": "Select a signature to place",
+    "noSignaturesFound": "No signatures found",
+    "createNew": "Create New",
+
+    "createSignatureHeader": "Create Signature",
+    "clear": "Clear",
+    "saveSignature": "Save Signature",
+    "saving": "Saving...",
+    "pleaseDrawSignature": "Please draw a signature first.",
+    "failedToExportSignature": "Failed to export signature.",
+    "signatureSaved": "Signature saved!",
+
+    "libraryIsEmpty": "Library is Empty",
+    "createFirstSignature": "Create your first signature now!",
+    "createdDate": "Created {date}",
+    "@createdDate": {
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    },
+
+    "deleteSignatureTitle": "Delete Signature?",
+    "deleteSignatureContent": "This action will permanently remove this signature from your library.",
+
+    "penColor": "Pen Color",
+    "penThickness": "Pen Thickness",
+    "customColor": "Custom Color",
+    "colorBlack": "Black",
+    "colorBlue": "Blue",
+    "colorCyan": "Cyan",
+    "colorCustom": "Custom",
+    "thicknessThin": "Thin",
+    "thicknessMedium": "Medium",
+    "thicknessThick": "Thick",
+    "apply": "Apply",
+
+    "fullPreview": "Full Preview",
+    "pinchToZoom": "Pinch to zoom",
+    "shareSignature": "Signature: {name}",
+    "@shareSignature": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
     }
 }
