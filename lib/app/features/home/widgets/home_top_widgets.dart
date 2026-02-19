@@ -147,6 +147,7 @@ class QuickActionCard extends StatelessWidget {
               const SizedBox(height: 16),
               Text(
                 title,
+                textAlign: TextAlign.center,
                 style: theme.textTheme.labelLarge?.copyWith(
                   fontWeight: FontWeight.w600,
                   color: theme.colorScheme.primary,
