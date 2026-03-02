@@ -15,6 +15,9 @@ class PDFSigningState with _$PDFSigningState {
     @Default(Offset(100, 100)) Offset signaturePosition,
     @Default(1.0) double signatureScale,
     @Default(1) int currentPage,
+    @Default(1) int targetPage,
+    @Default(false) bool isPreviewing,
+    String? previewPdfPath,
     Failure? failure,
     @Default(false) bool saveSuccess,
   }) = _PDFSigningState;

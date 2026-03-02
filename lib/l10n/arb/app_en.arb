@@ -172,5 +172,24 @@
                 "type": "String"
             }
         }
+    },
+
+    "previewSignature": "Preview",
+    "backToEdit": "Back to Edit",
+    "saveDocument": "Save",
+    "removeSignature": "Remove",
+    "selectPage": "Select page to sign",
+    "generatingPreview": "Generating preview...",
+    "previewTitle": "Preview Signed Document",
+    "pageOf": "Page {current} of {total}",
+    "@pageOf": {
+        "placeholders": {
+            "current": {
+                "type": "int"
+            },
+            "total": {
+                "type": "int"
+            }
+        }
     }
 }

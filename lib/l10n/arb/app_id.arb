@@ -106,5 +106,14 @@
 
     "fullPreview": "Pratinjau Penuh",
     "pinchToZoom": "Cubit untuk memperbesar",
-    "shareSignature": "Tanda Tangan: {name}"
+    "shareSignature": "Tanda Tangan: {name}",
+
+    "previewSignature": "Pratinjau",
+    "backToEdit": "Kembali ke Edit",
+    "saveDocument": "Simpan",
+    "removeSignature": "Hapus",
+    "selectPage": "Pilih halaman untuk ditandatangani",
+    "generatingPreview": "Membuat pratinjau...",
+    "previewTitle": "Pratinjau Dokumen Ditandatangani",
+    "pageOf": "Halaman {current} dari {total}"
 }

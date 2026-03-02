@@ -23,6 +23,9 @@ mixin _$PDFSigningState {
   Offset get signaturePosition => throw _privateConstructorUsedError;
   double get signatureScale => throw _privateConstructorUsedError;
   int get currentPage => throw _privateConstructorUsedError;
+  int get targetPage => throw _privateConstructorUsedError;
+  bool get isPreviewing => throw _privateConstructorUsedError;
+  String? get previewPdfPath => throw _privateConstructorUsedError;
   Failure? get failure => throw _privateConstructorUsedError;
   bool get saveSuccess => throw _privateConstructorUsedError;
 
@@ -47,6 +50,9 @@ abstract class $PDFSigningStateCopyWith<$Res> {
     Offset signaturePosition,
     double signatureScale,
     int currentPage,
+    int targetPage,
+    bool isPreviewing,
+    String? previewPdfPath,
     Failure? failure,
     bool saveSuccess,
   });
@@ -77,6 +83,9 @@ class _$PDFSigningStateCopyWithImpl<$Res, $Val extends PDFSigningState>
     Object? signaturePosition = null,
     Object? signatureScale = null,
     Object? currentPage = null,
+    Object? targetPage = null,
+    Object? isPreviewing = null,
+    Object? previewPdfPath = freezed,
     Object? failure = freezed,
     Object? saveSuccess = null,
   }) {
@@ -106,6 +115,18 @@ class _$PDFSigningStateCopyWithImpl<$Res, $Val extends PDFSigningState>
                 ? _value.currentPage
                 : currentPage // ignore: cast_nullable_to_non_nullable
                       as int,
+            targetPage: null == targetPage
+                ? _value.targetPage
+                : targetPage // ignore: cast_nullable_to_non_nullable
+                      as int,
+            isPreviewing: null == isPreviewing
+                ? _value.isPreviewing
+                : isPreviewing // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            previewPdfPath: freezed == previewPdfPath
+                ? _value.previewPdfPath
+                : previewPdfPath // ignore: cast_nullable_to_non_nullable
+                      as String?,
             failure: freezed == failure
                 ? _value.failure
                 : failure // ignore: cast_nullable_to_non_nullable
@@ -174,6 +195,9 @@ abstract class _$$PDFSigningStateImplCopyWith<$Res>
     Offset signaturePosition,
     double signatureScale,
     int currentPage,
+    int targetPage,
+    bool isPreviewing,
+    String? previewPdfPath,
     Failure? failure,
     bool saveSuccess,
   });
@@ -206,6 +230,9 @@ class __$$PDFSigningStateImplCopyWithImpl<$Res>
     Object? signaturePosition = null,
     Object? signatureScale = null,
     Object? currentPage = null,
+    Object? targetPage = null,
+    Object? isPreviewing = null,
+    Object? previewPdfPath = freezed,
     Object? failure = freezed,
     Object? saveSuccess = null,
   }) {
@@ -235,6 +262,18 @@ class __$$PDFSigningStateImplCopyWithImpl<$Res>
             ? _value.currentPage
             : currentPage // ignore: cast_nullable_to_non_nullable
                   as int,
+        targetPage: null == targetPage
+            ? _value.targetPage
+            : targetPage // ignore: cast_nullable_to_non_nullable
+                  as int,
+        isPreviewing: null == isPreviewing
+            ? _value.isPreviewing
+            : isPreviewing // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        previewPdfPath: freezed == previewPdfPath
+            ? _value.previewPdfPath
+            : previewPdfPath // ignore: cast_nullable_to_non_nullable
+                  as String?,
         failure: freezed == failure
             ? _value.failure
             : failure // ignore: cast_nullable_to_non_nullable
@@ -258,6 +297,9 @@ class _$PDFSigningStateImpl implements _PDFSigningState {
     this.signaturePosition = const Offset(100, 100),
     this.signatureScale = 1.0,
     this.currentPage = 1,
+    this.targetPage = 1,
+    this.isPreviewing = false,
+    this.previewPdfPath,
     this.failure,
     this.saveSuccess = false,
   });
@@ -279,6 +321,14 @@ class _$PDFSigningStateImpl implements _PDFSigningState {
   @JsonKey()
   final int currentPage;
   @override
+  @JsonKey()
+  final int targetPage;
+  @override
+  @JsonKey()
+  final bool isPreviewing;
+  @override
+  final String? previewPdfPath;
+  @override
   final Failure? failure;
   @override
   @JsonKey()
@@ -286,7 +336,7 @@ class _$PDFSigningStateImpl implements _PDFSigningState {
 
   @override
   String toString() {
-    return 'PDFSigningState(document: $document, isSaving: $isSaving, selectedSignature: $selectedSignature, signaturePosition: $signaturePosition, signatureScale: $signatureScale, currentPage: $currentPage, failure: $failure, saveSuccess: $saveSuccess)';
+    return 'PDFSigningState(document: $document, isSaving: $isSaving, selectedSignature: $selectedSignature, signaturePosition: $signaturePosition, signatureScale: $signatureScale, currentPage: $currentPage, targetPage: $targetPage, isPreviewing: $isPreviewing, previewPdfPath: $previewPdfPath, failure: $failure, saveSuccess: $saveSuccess)';
   }
 
   @override
@@ -306,6 +356,12 @@ class _$PDFSigningStateImpl implements _PDFSigningState {
                 other.signatureScale == signatureScale) &&
             (identical(other.currentPage, currentPage) ||
                 other.currentPage == currentPage) &&
+            (identical(other.targetPage, targetPage) ||
+                other.targetPage == targetPage) &&
+            (identical(other.isPreviewing, isPreviewing) ||
+                other.isPreviewing == isPreviewing) &&
+            (identical(other.previewPdfPath, previewPdfPath) ||
+                other.previewPdfPath == previewPdfPath) &&
             (identical(other.failure, failure) || other.failure == failure) &&
             (identical(other.saveSuccess, saveSuccess) ||
                 other.saveSuccess == saveSuccess));
@@ -320,6 +376,9 @@ class _$PDFSigningStateImpl implements _PDFSigningState {
     signaturePosition,
     signatureScale,
     currentPage,
+    targetPage,
+    isPreviewing,
+    previewPdfPath,
     failure,
     saveSuccess,
   );
@@ -344,6 +403,9 @@ abstract class _PDFSigningState implements PDFSigningState {
     final Offset signaturePosition,
     final double signatureScale,
     final int currentPage,
+    final int targetPage,
+    final bool isPreviewing,
+    final String? previewPdfPath,
     final Failure? failure,
     final bool saveSuccess,
   }) = _$PDFSigningStateImpl;
@@ -360,6 +422,12 @@ abstract class _PDFSigningState implements PDFSigningState {
   double get signatureScale;
   @override
   int get currentPage;
+  @override
+  int get targetPage;
+  @override
+  bool get isPreviewing;
+  @override
+  String? get previewPdfPath;
   @override
   Failure? get failure;
   @override
