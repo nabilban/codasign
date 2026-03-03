@@ -2,8 +2,9 @@ import 'package:codasign/app/features/home/cubit/saved_signatures_cubit.dart';
 import 'package:codasign/app/features/home/cubit/signed_documents_cubit.dart';
 import 'package:codasign/app/features/home/widgets/home_bottom_widgets.dart';
 import 'package:codasign/app/features/home/widgets/home_top_widgets.dart';
-import 'package:codasign/app/providers/providers.dart';
 import 'package:codasign/app/ui/colors.dart';
+import 'package:codasign/core/domain/repositories/document_repository.dart';
+import 'package:codasign/core/domain/repositories/signature_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,12 +17,12 @@ class HomePage extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => SavedSignaturesCubit(
-            repository: getIt(),
+            repository: context.read<SignatureRepository>(),
           )..loadSignatures(),
         ),
         BlocProvider(
           create: (context) => SignedDocumentsCubit(
-            repository: getIt(),
+            repository: context.read<DocumentRepository>(),
           )..loadDocuments(),
         ),
       ],

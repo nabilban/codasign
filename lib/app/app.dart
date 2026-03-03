@@ -6,14 +6,18 @@ import 'package:codasign/app/ui/theme.dart';
 import 'package:codasign/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class App extends StatelessWidget {
-  const App({super.key});
+  const App({required this.sharedPreferences, super.key});
+
+  final SharedPreferences sharedPreferences;
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => getIt<LocaleCubit>(),
+    return MultiProvider(
+      providers: globalProviders(sharedPreferences: sharedPreferences),
       child: BlocBuilder<LocaleCubit, LocaleState>(
         builder: (context, state) {
           return MaterialApp(

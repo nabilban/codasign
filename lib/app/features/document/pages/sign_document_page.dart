@@ -5,9 +5,10 @@ import 'package:codasign/app/features/document/cubit/pdf_signing_cubit.dart';
 import 'package:codasign/app/features/document/cubit/pdf_signing_state.dart';
 import 'package:codasign/app/features/document/pages/pdf_signing_page.dart';
 import 'package:codasign/app/features/home/cubit/saved_signatures_cubit.dart';
-import 'package:codasign/app/providers/providers.dart';
 import 'package:codasign/app/ui/colors.dart';
+import 'package:codasign/core/data/services/pdf_merging_service.dart';
 import 'package:codasign/core/domain/models/document_model.dart';
+import 'package:codasign/core/domain/repositories/document_repository.dart';
 import 'package:codasign/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -242,8 +243,8 @@ class SignDocumentPage extends StatelessWidget {
                       providers: [
                         BlocProvider(
                           create: (context) => PDFSigningCubit(
-                            repository: getIt(),
-                            mergingService: getIt(),
+                            repository: context.read<DocumentRepository>(),
+                            mergingService: context.read<PdfMergingService>(),
                             initialState: PDFSigningState.initial(document),
                           ),
                         ),

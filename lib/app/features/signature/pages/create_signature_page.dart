@@ -5,8 +5,8 @@ import 'package:codasign/app/features/signature/cubit/signature_cubit.dart';
 import 'package:codasign/app/features/signature/cubit/signature_state.dart';
 import 'package:codasign/app/features/signature/widgets/signature_canvas.dart';
 import 'package:codasign/app/features/signature/widgets/signature_controls.dart';
-import 'package:codasign/app/providers/providers.dart';
 import 'package:codasign/app/ui/colors.dart';
+import 'package:codasign/core/domain/repositories/signature_repository.dart';
 import 'package:codasign/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -69,7 +69,7 @@ class _CreateSignaturePageState extends State<CreateSignaturePage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => SignatureCubit(
-        repository: getIt(),
+        repository: context.read<SignatureRepository>(),
       ),
       child: BlocConsumer<SignatureCubit, SignatureState>(
         listenWhen: (prev, curr) =>
