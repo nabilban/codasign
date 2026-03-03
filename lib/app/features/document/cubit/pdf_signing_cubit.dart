@@ -60,6 +60,10 @@ class PDFSigningCubit extends Cubit<PDFSigningState> {
     emit(state.copyWith(previewPdfPath: null, isPreviewing: false));
   }
 
+  void updateDocumentName(String name) {
+    emit(state.copyWith(document: state.document.copyWith(name: name)));
+  }
+
   Future<void> previewSignedDocument({
     required double pdfPageWidth,
     required double pdfPageHeight,

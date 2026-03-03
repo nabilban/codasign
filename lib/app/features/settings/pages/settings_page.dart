@@ -307,8 +307,11 @@ class SettingsPage extends StatelessWidget {
     try {
       final appDir = await getApplicationDocumentsDirectory();
       final entities = appDir.listSync(recursive: true).where((entity) {
-        final path = entity.path;
-        return path.contains('/Signatures') || path.contains('/Documents');
+        final path = entity.path.toLowerCase();
+        return path.contains('/signatures') ||
+            path.contains('/signed_documents') ||
+            path.contains('signatures_index') ||
+            path.contains('signed_documents_index');
       }).toList();
 
       debugPrint('--- DEBUG: SIGNATURES & DOCUMENTS DIRECTORIES ---');

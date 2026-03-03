@@ -9,5 +9,6 @@ abstract class SignatureRepository {
     required String name,
   });
   Future<Either<Failure, Unit>> removeSignature(String id);
+  Future<Either<Failure, Unit>> renameSignature(String id, String newName);
   Future<Either<Failure, Unit>> clearAllSignatures();
 }

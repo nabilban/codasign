@@ -75,6 +75,15 @@ class SignatureLocalDatasource {
     await _writeIndex(updated);
   }
 
+  Future<void> renameSignature(String id, String newName) async {
+    final existing = await loadSignatures();
+    final updated = existing.map((s) {
+      if (s.id == id) return s.copyWith(name: newName);
+      return s;
+    }).toList();
+    await _writeIndex(updated);
+  }
+
   Future<void> deleteAllSignatures() async {
     final sigDir = await _getSignaturesDir();
     if (sigDir.existsSync()) {

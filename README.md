@@ -130,7 +130,7 @@ lib/
 │   │   ├── home/          # Dashboard & overview
 │   │   ├── settings/      # App settings
 │   │   └── signature/     # Signature creation & library
-│   ├── providers/         # Dependency injection (GetIt)
+│   ├── providers/         # Dependency injection
 │   ├── router/            # Auto Route navigation
 │   └── ui/                # Theme, colors, constants
 ├── core/

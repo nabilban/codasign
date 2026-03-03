@@ -37,17 +37,20 @@ List<SingleChildWidget> globalProviders({
     ),
 
     // ── Repositories (depend on datasources above) ──
-    ProxyProvider<SettingsLocalDatasource, SettingsRepository>(
-      update: (_, datasource, _) =>
-          SettingsRepositoryImpl(datasource: datasource),
+    Provider<SettingsRepository>(
+      create: (context) => SettingsRepositoryImpl(
+        datasource: context.read<SettingsLocalDatasource>(),
+      ),
     ),
-    ProxyProvider<SignatureLocalDatasource, SignatureRepository>(
-      update: (_, datasource, _) =>
-          SignatureRepositoryImpl(datasource: datasource),
+    Provider<SignatureRepository>(
+      create: (context) => SignatureRepositoryImpl(
+        datasource: context.read<SignatureLocalDatasource>(),
+      ),
     ),
-    ProxyProvider<DocumentLocalDatasource, DocumentRepository>(
-      update: (_, datasource, _) =>
-          DocumentRepositoryImpl(datasource: datasource),
+    Provider<DocumentRepository>(
+      create: (context) => DocumentRepositoryImpl(
+        datasource: context.read<DocumentLocalDatasource>(),
+      ),
     ),
 
     // ── Global Cubits ──

@@ -36,6 +36,21 @@ class SavedSignaturesCubit extends Cubit<SavedSignaturesState> {
     );
   }
 
+  Future<void> renameSignature(String id, String newName) async {
+    final result = await repository.renameSignature(id, newName);
+
+    result.fold(
+      (failure) => emit(state.copyWith(failure: failure)),
+      (_) {
+        final updated = state.signatures.map((s) {
+          if (s.id == id) return s.copyWith(name: newName);
+          return s;
+        }).toList();
+        emit(state.copyWith(signatures: updated));
+      },
+    );
+  }
+
   Future<void> clearAll() async {
     emit(state.copyWith(isLoading: true, failure: null));
     final result = await repository.clearAllSignatures();

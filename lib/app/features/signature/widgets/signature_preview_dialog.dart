@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:codasign/app/features/home/cubit/saved_signatures_cubit.dart';
 import 'package:codasign/app/ui/colors.dart';
 import 'package:codasign/core/domain/models/saved_signature.dart';
 import 'package:codasign/l10n/l10n.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
 
 class SignaturePreviewDialog extends StatelessWidget {
@@ -15,10 +17,14 @@ class SignaturePreviewDialog extends StatelessWidget {
   final SavedSignature signature;
 
   static Future<void> show(BuildContext context, SavedSignature signature) {
+    final cubit = context.read<SavedSignaturesCubit>();
     return showDialog<void>(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.9),
-      builder: (context) => SignaturePreviewDialog(signature: signature),
+      builder: (context) => BlocProvider.value(
+        value: cubit,
+        child: SignaturePreviewDialog(signature: signature),
+      ),
     );
   }
 
@@ -71,6 +77,21 @@ class SignaturePreviewDialog extends StatelessWidget {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            IconButton(
+              onPressed: () => _showRenameDialog(context),
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.edit_outlined,
+                  color: theme.colorScheme.primary,
+                  size: 20,
+                ),
+              ),
+            ),
             IconButton(
               onPressed: () {
                 final file = XFile(signature.filePath);
@@ -178,6 +199,72 @@ class SignaturePreviewDialog extends StatelessWidget {
               fontSize: 12,
               fontWeight: FontWeight.w500,
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showRenameDialog(BuildContext context) {
+    final controller = TextEditingController(text: signature.name);
+
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: const Color(0xFF1B263B),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          context.l10n.renameSignatureTitle,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: context.l10n.newName,
+            hintStyle: const TextStyle(color: Colors.white38),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.white24),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(
+              context.l10n.cancel,
+              style: const TextStyle(color: Colors.white54),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final newName = controller.text.trim();
+              if (newName.isEmpty) return;
+              Navigator.pop(dialogContext);
+              context.read<SavedSignaturesCubit>().renameSignature(
+                signature.id,
+                newName,
+              );
+              // Close the preview dialog too since the name changed
+              Navigator.pop(context);
+            },
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: Text(context.l10n.rename),
           ),
         ],
       ),

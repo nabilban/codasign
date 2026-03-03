@@ -191,5 +191,11 @@
                 "type": "int"
             }
         }
-    }
+    },
+
+    "rename": "Rename",
+    "renameSignatureTitle": "Rename Signature",
+    "renameDocumentTitle": "Rename Document",
+    "newName": "New name",
+    "nameCannotBeEmpty": "Name cannot be empty"
 }

@@ -59,6 +59,15 @@ class DocumentLocalDatasource {
     await _writeIndex(updated);
   }
 
+  Future<void> renameDocument(String id, String newName) async {
+    final existing = await loadSignedDocuments();
+    final updated = existing.map((d) {
+      if (d.id == id) return d.copyWith(name: newName);
+      return d;
+    }).toList();
+    await _writeIndex(updated);
+  }
+
   Future<void> deleteAllDocuments() async {
     final dir = await _getSignedDocsDir();
     if (dir.existsSync()) {

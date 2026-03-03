@@ -35,6 +35,14 @@ class SignedDocumentsCubit extends Cubit<SignedDocumentsState> {
     );
   }
 
+  Future<void> renameDocument(String id, String newName) async {
+    final result = await repository.renameDocument(id, newName);
+    await result.fold(
+      (_) async => null,
+      (_) => loadDocuments(),
+    );
+  }
+
   Future<void> clearAll() async {
     emit(state.copyWith(isLoading: true, failure: null));
     final result = await repository.clearAllDocuments();

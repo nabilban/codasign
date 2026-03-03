@@ -528,6 +528,15 @@ class _SignedDocumentCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
+                  onPressed: () => _showRenameDialog(context),
+                  icon: Icon(
+                    Icons.edit_outlined,
+                    color: theme.colorScheme.primary,
+                    size: 20,
+                  ),
+                  tooltip: context.l10n.rename,
+                ),
+                IconButton(
                   onPressed: () {
                     final file = XFile(document.path);
                     Share.shareXFiles(
@@ -542,11 +551,74 @@ class _SignedDocumentCard extends StatelessWidget {
                   ),
                   tooltip: context.l10n.shareTooltip,
                 ),
-                // Delete button removed for safety on Home page
               ],
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showRenameDialog(BuildContext context) {
+    final controller = TextEditingController(text: document.name);
+
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: const Color(0xFF1B263B),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          context.l10n.renameDocumentTitle,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: context.l10n.newName,
+            hintStyle: const TextStyle(color: Colors.white38),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.white24),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(
+              context.l10n.cancel,
+              style: const TextStyle(color: Colors.white54),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final newName = controller.text.trim();
+              if (newName.isEmpty) return;
+              Navigator.pop(dialogContext);
+              context.read<SignedDocumentsCubit>().renameDocument(
+                document.id,
+                newName,
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: Text(context.l10n.rename),
+          ),
+        ],
       ),
     );
   }

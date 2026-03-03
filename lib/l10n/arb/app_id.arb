@@ -115,5 +115,11 @@
     "selectPage": "Pilih halaman untuk ditandatangani",
     "generatingPreview": "Membuat pratinjau...",
     "previewTitle": "Pratinjau Dokumen Ditandatangani",
-    "pageOf": "Halaman {current} dari {total}"
+    "pageOf": "Halaman {current} dari {total}",
+
+    "rename": "Ubah Nama",
+    "renameSignatureTitle": "Ubah Nama Tanda Tangan",
+    "renameDocumentTitle": "Ubah Nama Dokumen",
+    "newName": "Nama baru",
+    "nameCannotBeEmpty": "Nama tidak boleh kosong"
 }
