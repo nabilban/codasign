@@ -238,46 +238,61 @@ class _PDFSigningPageState extends State<PDFSigningPage> {
           // Editable document name
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Builder(
-              builder: (context) {
-                // Initialize controller lazily with current document name
-                _nameController ??= TextEditingController(
-                  text: state.document.name,
-                );
-                return TextField(
-                  controller: _nameController,
-                  onChanged: (value) =>
-                      context.read<PDFSigningCubit>().updateDocumentName(value),
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: AppColors.textPrimary,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  context.l10n.documentNameHint,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: AppColors.textSecondary.withValues(alpha: 0.7),
                   ),
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(
-                      Icons.description_outlined,
-                      color: AppColors.textSecondary,
-                      size: 20,
-                    ),
-                    hintText: context.l10n.newName,
-                    hintStyle: TextStyle(
-                      color: AppColors.textSecondary.withValues(alpha: 0.5),
-                    ),
-                    filled: true,
-                    fillColor: AppColors.surface,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: AppColors.primary),
-                    ),
-                  ),
-                );
-              },
+                ),
+                const SizedBox(height: 8),
+                Builder(
+                  builder: (context) {
+                    // Initialize controller lazily with current document name
+                    _nameController ??= TextEditingController(
+                      text: state.document.name,
+                    );
+                    return TextField(
+                      controller: _nameController,
+                      onChanged: (value) => context
+                          .read<PDFSigningCubit>()
+                          .updateDocumentName(value),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: AppColors.textPrimary,
+                      ),
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(
+                          Icons.description_outlined,
+                          color: AppColors.textSecondary,
+                          size: 20,
+                        ),
+                        hintText: context.l10n.newName,
+                        hintStyle: TextStyle(
+                          color: AppColors.textSecondary.withValues(alpha: 0.5),
+                        ),
+                        filled: true,
+                        fillColor: AppColors.surface,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: AppColors.primary,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 12),

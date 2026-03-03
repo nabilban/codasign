@@ -121,5 +121,7 @@
     "renameSignatureTitle": "Ubah Nama Tanda Tangan",
     "renameDocumentTitle": "Ubah Nama Dokumen",
     "newName": "Nama baru",
-    "nameCannotBeEmpty": "Nama tidak boleh kosong"
+    "nameCannotBeEmpty": "Nama tidak boleh kosong",
+
+    "documentNameHint": "Anda dapat mengubah nama file sebelum menyimpan"
 }

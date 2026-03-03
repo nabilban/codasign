@@ -197,5 +197,7 @@
     "renameSignatureTitle": "Rename Signature",
     "renameDocumentTitle": "Rename Document",
     "newName": "New name",
-    "nameCannotBeEmpty": "Name cannot be empty"
+    "nameCannotBeEmpty": "Name cannot be empty",
+
+    "documentNameHint": "You can rename the file before saving"
 }
