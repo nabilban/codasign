@@ -50,6 +50,7 @@ List<SingleChildWidget> globalProviders({
     Provider<DocumentRepository>(
       create: (context) => DocumentRepositoryImpl(
         datasource: context.read<DocumentLocalDatasource>(),
+        mergingService: context.read<PdfMergingService>(),
       ),
     ),
 

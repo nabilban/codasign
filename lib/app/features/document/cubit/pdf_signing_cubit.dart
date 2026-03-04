@@ -87,7 +87,7 @@ class PDFSigningCubit extends Cubit<PDFSigningState> {
         viewerPageHeight: viewerPageHeight,
       );
 
-      await mergingService.bakeSignature(
+      final pageCount = await mergingService.bakeSignature(
         inputPath: state.document.path,
         outputPath: tempPath,
         signaturePath: state.selectedSignature!.filePath,
@@ -102,6 +102,7 @@ class PDFSigningCubit extends Cubit<PDFSigningState> {
         state.copyWith(
           isPreviewing: false,
           previewPdfPath: tempPath,
+          document: state.document.copyWith(pageCount: pageCount),
         ),
       );
     } on Exception catch (e) {

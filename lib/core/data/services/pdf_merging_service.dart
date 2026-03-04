@@ -51,4 +51,14 @@ class PdfMergingService {
       document.dispose();
     }
   }
+
+  Future<int> getPageCount(String path) async {
+    final bytes = await File(path).readAsBytes();
+    final document = PdfDocument(inputBytes: bytes);
+    try {
+      return document.pages.count;
+    } finally {
+      document.dispose();
+    }
+  }
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:codasign/core/data/datasources/document_local_datasource.dart';
+import 'package:codasign/core/data/services/pdf_merging_service.dart';
 import 'package:codasign/core/domain/models/document_model.dart';
 import 'package:codasign/core/domain/models/failure.dart';
 import 'package:codasign/core/domain/repositories/document_repository.dart';
@@ -9,9 +10,13 @@ import 'package:file_picker/file_picker.dart';
 import 'package:uuid/uuid.dart';
 
 class DocumentRepositoryImpl implements DocumentRepository {
-  DocumentRepositoryImpl({required this.datasource});
+  DocumentRepositoryImpl({
+    required this.datasource,
+    required this.mergingService,
+  });
 
   final DocumentLocalDatasource datasource;
+  final PdfMergingService mergingService;
   final _controller = StreamController<List<DocumentModel>>.broadcast();
 
   @override
@@ -34,12 +39,16 @@ class DocumentRepositoryImpl implements DocumentRepository {
         return const Right(null);
       }
 
+      final pageCount = await mergingService.getPageCount(
+        result.files.single.path!,
+      );
+
       final document = DocumentModel(
         id: const Uuid().v4(),
         name: result.files.single.name,
         path: result.files.single.path!,
         size: result.files.single.size,
-        pageCount: 0, // Will be updated by the viewer or a more specific tool
+        pageCount: pageCount,
         createdAt: DateTime.now(),
       );
 
